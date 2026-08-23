@@ -14,7 +14,7 @@ Writes:
 Then rebuild the HTML:
 
   python generate_report.py example/SAC_4_LIDAR_train_overnight.json \\
-      --lap example/fastest-lap.json -o example/index.html
+      --lap example/fastest-lap.json -o ../docs/index.html
 """
 
 from __future__ import annotations
@@ -248,7 +248,7 @@ def main() -> None:
     print(
         "Rebuild the report with:\n"
         f"  python generate_report.py example/SAC_4_LIDAR_train_overnight.json "
-        f"--lap {args.output} -o example/index.html",
+        f"--lap {args.output} -o ../docs/index.html",
         flush=True,
     )
 

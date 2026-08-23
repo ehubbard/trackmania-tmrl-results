@@ -4,8 +4,11 @@ A public notebook for one experiment: a **LIDAR SAC** agent learning to drive **
 
 This is not a fork of tmrl. tmrl is the trainer. This repo is what happened, why, and how to read it — including a shakedown overnight run we are keeping as baseline.
 
-Live numbers (when training): [wandb `models-acme/tmrl`](https://wandb.ai/models-acme/tmrl).  
-Shakedown story page: [learning-story/example/index.html](learning-story/example/index.html).
+Live numbers (when training): [wandb `models-acme/tmrl`](https://wandb.ai/models-acme/tmrl).
+
+**Read the report in a browser** (no download): [ehubbard.github.io/trackmania-tmrl-results](https://ehubbard.github.io/trackmania-tmrl-results/) once GitHub Pages is on (`Settings → Pages → branch develop → /docs`). Until that switch is flipped, this also works: [htmlpreview of the same page](https://htmlpreview.github.io/?https://raw.githubusercontent.com/ehubbard/trackmania-tmrl-results/develop/docs/index.html).
+
+The repo is the public report plus the small scripts that rebuild it. Substack (or any blog) is still a good place for a written recap that *links* here — GitHub’s file view will not run the HTML.
 
 ## Under the hood
 

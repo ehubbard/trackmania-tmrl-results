@@ -667,7 +667,7 @@ def main() -> None:
         "-o",
         "--output",
         type=Path,
-        default=Path("learning-story/example/index.html"),
+        default=Path("docs/index.html"),
         help="HTML path",
     )
     parser.add_argument(

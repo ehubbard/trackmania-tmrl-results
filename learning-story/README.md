@@ -8,7 +8,7 @@ It is a companion to [tmrl](https://github.com/trackmania-rl/tmrl), not a fork. 
 
 Wandb is the right live logger. It is a weak place to *feel* the learning. A story page plots reward against **epoch** (not upload time), leaves missing epochs empty instead of drawing a fake leap, and can later point at saved policies from hour 2 vs hour 12.
 
-The overnight LIDAR run in `example/` is the first cut of that page. Open [`example/index.html`](example/index.html) in a browser. After a capture pass it includes an overhead ghost, cockpit stills, and the five test episodes — not a TrackMania `.Replay.Gbx`.
+The overnight LIDAR run in `example/` is the first cut of that page. The copy people actually open is [`docs/index.html`](../docs/index.html), served on GitHub Pages so nobody has to download a file. After a capture pass it includes an overhead ghost, cockpit stills, and the test episodes — not a TrackMania `.Replay.Gbx`.
 
 ## Fastest lap on the page
 
@@ -24,7 +24,7 @@ With TrackMania open on tmrl-test (camera with the car hidden), click the game w
 
 ```bash
 python record_fastest_lap.py --episodes 5 -o example/fastest-lap.json
-python generate_report.py example/SAC_4_LIDAR_train_overnight.json --lap example/fastest-lap.json -o example/index.html
+python generate_report.py example/SAC_4_LIDAR_train_overnight.json --lap example/fastest-lap.json -o ../docs/index.html
 ```
 
 ## Generate a report
@@ -33,7 +33,7 @@ From this folder:
 
 ```bash
 python parse_trainer_log.py path/to/trainer.log -o metrics.json --run-name SAC_4_LIDAR_train
-python generate_report.py metrics.json -o example/index.html
+python generate_report.py metrics.json -o ../docs/index.html
 ```
 
 `generate_report.py` also accepts a raw trainer log. The parser handles tmrl 0.7.x headers, including the width change that skips epochs 10–99 if you use a naive regex (`=== epoch 9/10000 = round` vs `=== epoch 10/10000  round`).
