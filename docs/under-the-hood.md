@@ -4,7 +4,7 @@ Short version of what this experiment actually is. For the library itself, see [
 
 ## Game
 
-TrackMania 2020, Starter Access, local map **tmrl-test** (not Club play). User data lives under `Documents\Trackmania2020`, not `Documents\Trackmania`. Window about 958×488. OpenPlanet plugin `TMRL_GrabData` must be loaded.
+TrackMania 2020 with Club Access. User data lives under `Documents\Trackmania2020`, not `Documents\Trackmania`. Window about 958×488. OpenPlanet plugin `TMRL_GrabData` must be loaded. LIDAR still needs black-border asphalt; Club does not waive that. Each map gets its own `reward.pkl` and `RUN_NAME`.
 
 ## Observation (LIDAR)
 
@@ -22,7 +22,7 @@ Virtual Xbox 360 pad via ViGEm: forward, back, steer. Keyboard is a fallback. Cl
 
 ## Reward
 
-A pickle of a human-ish trajectory (`TmrlData/reward/reward.pkl`) is the track spine. Reward is progress along that polyline. Too far off, or no progress for a countdown, ends the episode. Finish line adds 100. Constant penalty is 0 in our config. `ep_max_length` 1000 × 0.05 s ≈ 50 s.
+A pickle of a human-ish trajectory (`TmrlData/reward/reward.pkl`) is the track spine. tmrl always reads that **one** path, so keep named copies under `TmrlData/reward/tracks/<slug>.pkl` and restore before you train that map. Reward is progress along that polyline. Too far off, or no progress for a countdown, ends the episode. Finish line adds 100. Constant penalty is 0 in our config. `ep_max_length` 1000 × 0.05 s ≈ 50 s.
 
 ## Learning
 

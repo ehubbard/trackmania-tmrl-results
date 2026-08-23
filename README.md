@@ -30,7 +30,7 @@ What that run did **not** save: hourly policies (`SAVE_MODEL_EVERY` was 0) and T
 
 ## Next run (not started)
 
-Same LIDAR path, new name (planned: `SAC_4_LIDAR_v1`). `SAVE_MODEL_EVERY` is already **10** so the worker keeps timestamped `.tmod` files (~0.36 MB each). After training: a short capture pass (`record_fastest_lap.py`) and `--test` on a few snapshots for a then-vs-now strip. Do not turn on overnight `save_replays`; it fills disk. Details: [docs/next-run.md](docs/next-run.md).
+Club Access. First extra map: **Summer 2026-01**, LIDAR SAC, **new** `reward.pkl` and a unique `RUN_NAME` (not `SAC_4_LIDAR_train`). `SAVE_MODEL_EVERY` is already **10**. Reports are on demand (`progress_report.py --track ...`); there is no 2-hour timer. Do not mix maps in one replay buffer or pickle. Playbook: [docs/next-run.md](docs/next-run.md).
 
 ## Tools
 
@@ -39,6 +39,7 @@ Python 3.10+, no extra packages for the HTML report.
 ```text
 learning-story/parse_trainer_log.py   trainer stdout → JSON
 learning-story/generate_report.py     JSON/log → standalone HTML
+learning-story/progress_report.py     on-demand slice + archive (`--track` required)
 learning-story/record_fastest_lap.py  fastest finished lap (needs the game open)
 ```
 

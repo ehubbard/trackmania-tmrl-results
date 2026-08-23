@@ -8,6 +8,7 @@ across missing data instead of faking a jump.
 from __future__ import annotations
 
 import argparse
+import html as html_lib
 import json
 import statistics
 import sys
@@ -382,6 +383,107 @@ def fmt(n: float, digits: int = 1) -> str:
     return f"{n:.{digits}f}"
 
 
+def pad_report(index: int) -> str:
+    return f"{int(index):02d}"
+
+
+def pad_session(index: int) -> str:
+    return pad_report(index)
+
+
+def format_duration(seconds: float | None) -> str:
+    if seconds is None:
+        return "—"
+    s = max(0, int(round(float(seconds))))
+    h, rem = divmod(s, 3600)
+    m, sec = divmod(rem, 60)
+    if h:
+        return f"{h}h {m:02d}m"
+    if m:
+        return f"{m}m {sec:02d}s"
+    return f"{sec}s"
+
+
+def progress_title(
+    report: int,
+    attempts: int,
+    episode: float,
+    track: str = "",
+) -> str:
+    """H1: [Track ·] Report NN · Attempts N · Episode <mean length this window>."""
+    core = (
+        f"Report {pad_report(report)} · "
+        f"Attempts {int(attempts)} · Episode {int(round(float(episode)))}"
+    )
+    track = (track or "").strip()
+    if track:
+        return f"TrackMania training progress: {track} · {core}"
+    return f"TrackMania training progress: {core}"
+
+
+def notes_title(payload: dict[str, Any]) -> str:
+    """H1. Custom --label wins. Else the Track · Report/Attempts/Episode line."""
+    label = str(payload.get("label") or "").strip()
+    if label:
+        return f"TrackMania training progress: {label}"
+    prog = payload.get("progress")
+    if prog:
+        return progress_title(
+            int(prog.get("report") or 1),
+            int(prog.get("attempts") or 0),
+            float(prog.get("episode") or 0),
+            track=str(payload.get("track") or "").strip(),
+        )
+    return "TrackMania training progress"
+
+
+def metrics_legend_html(payload: dict[str, Any]) -> str:
+    """One-line honesty about Attempts / Episode. Progress reports only."""
+    if not payload.get("progress"):
+        return ""
+    return """
+    <p class="caption" id="legend">
+      <strong>Attempts</strong> are trainer rounds in this slice (the unit the log
+      counts), not laps.
+      <strong>Episode</strong> is mean <code>episode_length_train</code> in that
+      slice, in environment steps. 1000 is the episode cap — pinning there usually
+      means a finish. Neither figure is an official TrackMania lap time.
+    </p>
+    """
+
+
+def session_banner_html(payload: dict[str, Any]) -> str:
+    prog = payload.get("progress")
+    if not prog:
+        return ""
+    report = int(prog.get("report") or 1)
+    attempts = int(prog.get("attempts") or 0)
+    episode = float(prog.get("episode") or 0)
+    prev_ep = prog.get("episode_prev")
+    ret = prog.get("return_mean")
+    prev_ret = prog.get("return_mean_prev")
+    consumed = prog.get("consumed_rounds")
+    extra = []
+    if prev_ep is not None:
+        extra.append(f"previous episode {int(round(float(prev_ep)))}")
+    if ret is not None:
+        bit = f"mean return {fmt(float(ret))}"
+        if prev_ret is not None:
+            bit += f" (was {fmt(float(prev_ret))})"
+        extra.append(bit)
+    extra_txt = ("; " + "; ".join(extra)) if extra else ""
+    return f"""
+    <aside class="callout" id="session">
+      <strong>Report {pad_report(report)}.</strong>
+      {attempts} trainer rounds since the last report
+      (attempts). Mean episode length this window: {int(round(episode))}
+      steps{extra_txt}.
+      Log offset {consumed if consumed is not None else "—"}.
+      Same continuous run; this page is only the new slice.
+    </aside>
+    """
+
+
 def build_html(
     payload: dict[str, Any],
     lap: dict[str, Any] | None = None,
@@ -401,6 +503,18 @@ def build_html(
     finish_bonus = float(payload.get("finish_bonus") or 100)
     ep_cap = float(payload.get("ep_max_length") or 1000)
     run_name = payload.get("run_name") or "tmrl run"
+    track_name = str(payload.get("track") or "").strip()
+    map_html = html_lib.escape(track_name or "tmrl-test")
+    interface = str(payload.get("interface") or "TM20LIDAR")
+    if "FULL" in interface.upper():
+        sees_html = (
+            "Full cockpit camera frames plus speed from OpenPlanet. Not LIDAR."
+        )
+    else:
+        sees_html = (
+            "19 LIDAR rays from a cockpit screenshot (car hidden) plus speed "
+            "from OpenPlanet. Not a full camera."
+        )
 
     m_ret10 = first_round(rows, lambda r: float(r.get("return_train") or 0) >= 10)
     m_len500 = first_round(rows, lambda r: float(r.get("episode_length_train") or 0) >= 500)
@@ -415,7 +529,10 @@ def build_html(
             f"length {fmt(row['episode_length_train'], 0)}"
         )
 
-    lap_html = (
+    if payload.get("omit_lap") or payload.get("omit_lap"):
+        lap_html = ""
+    else:
+        lap_html = (
         lap_embed_html(lap, video_href, filmstrip=filmstrip)
         if lap
         else """
@@ -429,7 +546,7 @@ def build_html(
       mp4 encodes. That is the end-of-shakedown policy, not a lap from hour 3.
     </aside>
     """
-    )
+        )
 
     gap_note = ""
     if missing:
@@ -443,13 +560,115 @@ def build_html(
 
     hours = f"{wall:g} hours" if wall else f"{int(last['epoch']) + 1} epochs"
     mem_k = float(last.get("memory_len") or 0) / 1000
+    heading = notes_title(payload)
+    prog = payload.get("progress") or {}
+    session = payload.get("session") or {}
+    if prog:
+        elapsed_stat = str(int(prog.get("attempts") or 0))
+        elapsed_label = "Attempts"
+        duration_stat = str(int(round(float(prog.get("episode") or 0))))
+        duration_label = "Episode"
+        track_prefix = f"{track_name} · " if track_name else ""
+        lead = (
+            f"{track_prefix}{run_name} · {payload.get('interface') or 'TM20LIDAR'} · {payload.get('algorithm') or 'SAC'} · "
+            f"report {pad_report(prog.get('report') or 1)} · "
+            f"{int(prog.get('attempts') or 0)} attempts since last report · "
+            f"mean episode {int(round(float(prog.get('episode') or 0)))} steps · "
+            f"epochs {int(rows[0]['epoch'])}–{int(last['epoch'])}."
+        )
+    elif session:
+        elapsed_stat = format_duration(session.get("elapsed_s"))
+        elapsed_label = "Elapsed"
+        duration_stat = format_duration(session.get("duration_s"))
+        duration_label = "This session"
+        lead = (
+            f"{run_name} · {payload.get('interface') or 'TM20LIDAR'} · {payload.get('algorithm') or 'SAC'} · "
+            f"session {pad_session(session.get('index') or 1)}/"
+            f"{int(session.get('count') or 1):02d} · "
+            f"block {format_duration(session.get('duration_s'))} · "
+            f"elapsed {format_duration(session.get('elapsed_s'))} · "
+            f"epochs 0–{int(last['epoch'])}."
+        )
+    else:
+        elapsed_stat = hours.split()[0] if wall else str(int(last["epoch"]) + 1)
+        elapsed_label = "Hours" if wall else "Epochs"
+        duration_stat = str(int(last["epoch"]))
+        duration_label = "Last epoch"
+        lead = (
+            f"{run_name} · {payload.get('interface') or 'TM20LIDAR'} · {payload.get('algorithm') or 'SAC'} · "
+            f"{hours} · epochs 0–{int(last['epoch'])}."
+        )
+    later_block = (
+        """
+    <h2 id="later">Next report</h2>
+    <p>
+      Training can keep going. Ask for another report when you want an update;
+      it will only chart rounds collected since this page.
+    </p>
+"""
+        if prog or session
+        else """
+    <h2 id="later">What we still cannot show</h2>
+    <aside class="slot">
+      <strong>Then vs now.</strong>
+      Overnight <code>SAVE_MODEL_EVERY</code> was 0, so there is no hour-2 vs hour-12
+      policy. After v1 (snapshots every 10 epochs) this slot gets two ghosts or
+      two clips: early wobble vs later drive. Same map, same camera.
+    </aside>
+    <aside class="slot">
+      <strong>v1 vs this shakedown.</strong>
+      Overlay two trains on the same epoch axis once v1 exists. Until then this
+      page is one night of data, not a comparison.
+    </aside>
+    <p>
+      Wandb stays the live logger
+      (<a href="https://wandb.ai/models-acme/tmrl/runs/SAC_4_LIDAR_train_overnight">shakedown run</a>).
+      This page is the story you can share. TrackMania <code>.Replay.Gbx</code>
+      files do not embed on GitHub Pages; the 2D ghost plus a window video is
+      the public artifact.
+    </p>
+"""
+    )
+    phases_block = (
+        ""
+        if prog or session
+        else f"""
+    <h2>Four phases</h2>
+    <div class="phases">
+      <div class="phase">
+        <div class="when">Epochs 0–9</div>
+        <h3>Spin-outs</h3>
+        <p>Return near 0–5. Episodes die around 80–230 steps. The policy has not learned to stay on the black-border road yet.</p>
+      </div>
+      <div class="phase">
+        <div class="when">Epochs {missing[0] if missing else "—"}–{missing[-1] if missing else "—"}</div>
+        <h3>Not in the graph</h3>
+        <p>Missing from the uploaded log. Do not read the jump after the gap as one-step genius. Training was still running.</p>
+      </div>
+      <div class="phase">
+        <div class="when">Epochs 100–108</div>
+        <h3>Breakthrough</h3>
+        <p>First long episodes, then full-length runs. Return crosses 200 — finish bonus plus progress down the track.</p>
+      </div>
+      <div class="phase">
+        <div class="when">Epochs 109–{int(last["epoch"])}</div>
+        <h3>Consistent driving</h3>
+        <p>Episode length mostly glued to the cap. Return hangs around 190–230 (peak {fmt(peak, 0)}). Noise is SAC, not a broken chart.</p>
+      </div>
+    </div>
+"""
+    )
+    session_banner = session_banner_html(payload)
+    legend = metrics_legend_html(payload)
+    heading_html = html_lib.escape(heading)
+    lead_html = html_lib.escape(lead)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>trackmania-tmrl-results — {run_name}</title>
+  <title>{heading_html}</title>
   <style>
     :root {{
       --bg: #fafaf9;
@@ -535,12 +754,11 @@ def build_html(
 </head>
 <body>
   <header>
-    <h1>How the car learned overnight</h1>
+    <h1>{heading_html}</h1>
     <p class="lead">
-      Shakedown run on tmrl-test. {run_name} · {payload.get("interface") or "TM20LIDAR"} · {payload.get("algorithm") or "SAC"} ·
-      {hours} · epochs 0–{int(last["epoch"])}.
-      We keep this as baseline. v1 is a later train with snapshots.
+      {lead_html}
     </p>
+    {legend}
     <nav>
       <a href="#hood">Under the hood</a>
       <a href="#lap">The car</a>
@@ -553,11 +771,11 @@ def build_html(
     <div class="hood">
       <div>
         <h3>Sees</h3>
-        <p>19 LIDAR rays from a cockpit screenshot (car hidden) plus speed from OpenPlanet. Not a full camera.</p>
+        <p>{sees_html}</p>
       </div>
       <div>
         <h3>Does</h3>
-        <p>Throttle, brake, steer on a virtual Xbox pad. One TrackMania window, 20&nbsp;Hz, map tmrl-test.</p>
+        <p>Throttle, brake, steer on a virtual Xbox pad. One TrackMania window, 20&nbsp;Hz, map {map_html}.</p>
       </div>
       <div>
         <h3>Learns</h3>
@@ -566,11 +784,12 @@ def build_html(
     </div>
     <p class="caption">LIDAR only works on black-border asphalt. Other Club maps need a new reward recording and usually a new train. Companion to <a href="https://github.com/trackmania-rl/tmrl">tmrl</a>. Public notes: <a href="https://github.com/ehubbard/trackmania-tmrl-results">trackmania-tmrl-results</a>.</p>
     <div class="stats">
-      <div class="stat"><b>{hours.split()[0] if wall else int(last["epoch"])+1}</b><span>{"Hours" if wall else "Epochs"}</span></div>
-      <div class="stat"><b>{int(last["epoch"])}</b><span>Last epoch</span></div>
+      <div class="stat"><b>{elapsed_stat}</b><span>{elapsed_label}</span></div>
+      <div class="stat"><b>{duration_stat}</b><span>{duration_label}</span></div>
       <div class="stat"><b>{fmt(peak, 0)}</b><span>Peak train return</span></div>
       <div class="stat"><b>{fmt(mem_k, 0)}k</b><span>Replay samples</span></div>
     </div>
+    {session_banner}
     {gap_note}
     <div id="lap">{lap_html}</div>
     <h2 id="curves">Train return</h2>
@@ -591,29 +810,7 @@ def build_html(
     <div class="chart">
       {svg_chart(lengths, y_max=ep_cap, y_ref=ep_cap, y_ref_label="Episode cap", color="#0f766e", y_label="Episode length (steps)")}
     </div>
-    <h2>Four phases</h2>
-    <div class="phases">
-      <div class="phase">
-        <div class="when">Epochs 0–9</div>
-        <h3>Spin-outs</h3>
-        <p>Return near 0–5. Episodes die around 80–230 steps. The policy has not learned to stay on the black-border road yet.</p>
-      </div>
-      <div class="phase">
-        <div class="when">Epochs {missing[0] if missing else "—"}–{missing[-1] if missing else "—"}</div>
-        <h3>Not in the graph</h3>
-        <p>Missing from the uploaded log. Do not read the jump after the gap as one-step genius. Training was still running.</p>
-      </div>
-      <div class="phase">
-        <div class="when">Epochs 100–108</div>
-        <h3>Breakthrough</h3>
-        <p>First long episodes, then full-length runs. Return crosses 200 — finish bonus plus progress down the track.</p>
-      </div>
-      <div class="phase">
-        <div class="when">Epochs 109–{int(last["epoch"])}</div>
-        <h3>Consistent driving</h3>
-        <p>Episode length mostly glued to the cap. Return hangs around 190–230 (peak {fmt(peak, 0)}). Noise is SAC, not a broken chart.</p>
-      </div>
-    </div>
+    {phases_block}
     <h2>Milestones</h2>
     <table>
       <thead><tr><th>What changed</th><th>When</th></tr></thead>
@@ -630,25 +827,7 @@ def build_html(
     <div class="chart">
       {svg_chart(memory, color="#44403c", y_label="Replay memory (samples)")}
     </div>
-    <h2 id="later">What we still cannot show</h2>
-    <aside class="slot">
-      <strong>Then vs now.</strong>
-      Overnight <code>SAVE_MODEL_EVERY</code> was 0, so there is no hour-2 vs hour-12
-      policy. After v1 (snapshots every 10 epochs) this slot gets two ghosts or
-      two clips: early wobble vs later drive. Same map, same camera.
-    </aside>
-    <aside class="slot">
-      <strong>v1 vs this shakedown.</strong>
-      Overlay two trains on the same epoch axis once v1 exists. Until then this
-      page is one night of data, not a comparison.
-    </aside>
-    <p>
-      Wandb stays the live logger
-      (<a href="https://wandb.ai/models-acme/tmrl/runs/SAC_4_LIDAR_train_overnight">shakedown run</a>).
-      This page is the story you can share. TrackMania <code>.Replay.Gbx</code>
-      files do not embed on GitHub Pages; the 2D ghost plus a window video is
-      the public artifact.
-    </p>
+    {later_block}
     <footer>
       Generated from {len(rows)} trainer rounds
       {" · " + payload["wandb_run"] if payload.get("wandb_run") else ""}.

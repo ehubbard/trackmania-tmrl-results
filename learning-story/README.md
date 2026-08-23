@@ -10,6 +10,37 @@ Wandb is the right live logger. It is a weak place to *feel* the learning. A sto
 
 The overnight LIDAR run in `example/` is the first cut of that page. The copy people actually open is [`docs/index.html`](../docs/index.html), served on GitHub Pages so nobody has to download a file. After a capture pass it includes an overhead ghost, cockpit stills, and the test episodes — not a TrackMania `.Replay.Gbx`.
 
+## On-demand progress reports
+
+Do not emit a page on a timer. When you want an update, run this against the current trainer log. It remembers how far it already reported and only charts **new** rounds. **`--track` is required.** Layout: `reports/<track-slug>/<run-name>/`.
+
+HTML is a view. That folder also copies (or documents) the data you cannot rebuild: `trainer.log`, redacted `config.snapshot.json`, `reward.pkl` for this map, `manifest.json`. `--data-only` refreshes those files without writing HTML or moving the watermark.
+
+```powershell
+# first page of a from-scratch train
+python progress_report.py path\to\trainer.log --track "Summer 2026-01" --run-name SAC_4_LIDAR_summer2026_01 --new-run
+
+# later, same train, only the new slice
+python progress_report.py path\to\trainer.log --track "Summer 2026-01" --run-name SAC_4_LIDAR_summer2026_01
+
+# copy log/config/reward; do not emit HTML or advance the watermark
+python progress_report.py path\to\trainer.log --track "Summer 2026-01" --run-name SAC_4_LIDAR_summer2026_01 --data-only
+
+# naming check without tmrl
+python progress_report.py --dry-run --track "Summer 2026-01" --run-name demo --new-run
+python progress_report.py --dry-run --track "Summer 2026-01" --run-name demo
+```
+
+Swap `--track` (and `RUN_NAME` / `reward.pkl`) for tmrl-test, campaign 03, an editor map, etc. Exact Club steps: [docs/next-run.md](../docs/next-run.md).
+
+Titles look like `TrackMania training progress: Summer 2026-01 · Report 03 · Attempts 24 · Episode 412`.
+
+- **Report** — 01, 02, … for this run. `--new-run` resets to 01.
+- **Attempts** — trainer rounds in this slice (the log’s unit; not laps).
+- **Episode** — mean episode length (steps) in this slice. Toward 1000 means it is finishing. Not an official lap time.
+
+`--label "night 1"` replaces the whole H1 if you want a custom name. Each map has its own `state.json` watermark; do not share `reward.pkl` or logs across tracks.
+
 ## Fastest lap on the page
 
 Training did **not** keep TrackMania replays (`save_replays` was off), so the overnight session has no `.Replay.Gbx` to embed. We still have the **final** weights. After training, a capture pass recorded the policy on tmrl-test:
