@@ -1,0 +1,22 @@
+=== epoch 0/10000 = round 0/10 ========================================
+  memory_len                    1700.0
+  return_train                     0.72
+  episode_length_train           110.3
+  loss_actor                      -0.1
+  loss_critic                      1.2
+  round_time                      10.0
+
+=== epoch 9/10000 = round 9/10 ========================================
+  memory_len                   46500.0
+  return_train                     5.17
+  episode_length_train           232.1
+
+=== epoch 10/10000  round 0/10 ========================================
+  memory_len                   49000.0
+  return_train                     6.0
+  episode_length_train           240.0
+
+=== epoch 100/10000  round 0/10 =======================================
+  memory_len                  251600.0
+  return_train                    71.19
+  episode_length_train           423.4

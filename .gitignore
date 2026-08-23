@@ -1,0 +1,11 @@
+.venv/
+wandb/
+__pycache__/
+*.pyc
+.cursor/
+*.tmod
+*.tcpt
+TmrlData/
+.env
+*.mp4
+*.webm
