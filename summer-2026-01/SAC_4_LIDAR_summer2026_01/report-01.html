@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrackMania training progress: Summer 2026-01 · Report 01 · Attempts 1981 · Episode 279</title>
+  <style>
+    :root {
+      --bg: #fafaf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e5e4;
+      --accent: #c2410c;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.5 "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    }
+    header, main { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    header { padding-top: 48px; padding-bottom: 8px; }
+    h1 { font-size: 2.1rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+    h2 { font-size: 1.25rem; margin: 40px 0 12px; }
+    p.lead { color: var(--muted); margin: 0 0 24px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+    .stat { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .stat b { display: block; font-size: 1.6rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .stat span { color: var(--muted); font-size: 0.85rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: #fff7ed;
+      padding: 12px 16px;
+      margin: 16px 0 28px;
+    }
+    .slot {
+      border-left: 3px solid #a8a29e;
+      background: #f5f5f4;
+      padding: 12px 16px;
+      margin: 8px 0 28px;
+      color: var(--muted);
+    }
+    .hood { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 8px 0 28px; }
+    .hood div { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .hood h3 { margin: 0 0 6px; font-size: 1rem; }
+    nav { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+    nav a { color: var(--muted); margin-right: 14px; }
+    .chart {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 12px 8px 0;
+      margin: 8px 0 28px;
+    }
+    .caption { color: var(--muted); font-size: 0.85rem; margin: 0 0 8px; }
+    .phases { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .phase { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .phase h3 { margin: 0 0 4px; font-size: 1rem; }
+    .phase .when { color: var(--muted); font-size: 0.8rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    table { width: 100%; border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.95rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 500; }
+    svg { width: 100%; height: auto; display: block; }
+    .muted { fill: #78716c; color: #78716c; }
+    .tiny { font: 11px ui-sans-serif, system-ui, sans-serif; }
+    .lap { display: grid; gap: 12px; margin: 8px 0 28px; }
+    .lap-video { width: 100%; background: #000; }
+    .lap-film { width: 100%; background: #111; display: block; }
+    .lap-stage { background: var(--card); border: 1px solid var(--line); }
+    .lap-hud {
+      display: flex; gap: 16px; align-items: center;
+      padding: 8px 12px; font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.9rem; border-top: 1px solid var(--line);
+    }
+    .lap-hud button {
+      margin-left: auto; background: var(--ink); color: #fff;
+      border: 0; padding: 4px 12px; cursor: pointer;
+    }
+    footer { color: var(--muted); font-size: 0.9rem; margin: 48px 0 64px; }
+    a { color: var(--accent); }
+    @media (max-width: 720px) {
+      .stats, .phases, .hood { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats, .phases, .hood { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TrackMania training progress: Summer 2026-01 · Report 01 · Attempts 1981 · Episode 279</h1>
+    <p class="lead">
+      Summer 2026-01 · SAC_4_LIDAR_summer2026_01 · TM20LIDAR · SAC · report 01 · 1981 attempts since last report · mean episode 279 steps · epochs 27–225.
+    </p>
+    
+    <p class="caption" id="legend">
+      <strong>Attempts</strong> are trainer rounds in this slice (the unit the log
+      counts), not laps.
+      <strong>Episode</strong> is mean <code>episode_length_train</code> in that
+      slice, in environment steps. 1000 is the episode cap — pinning there usually
+      means a finish. Neither figure is an official TrackMania lap time.
+    </p>
+    
+    <nav>
+      <a href="#hood">Under the hood</a>
+      <a href="#lap">The car</a>
+      <a href="#curves">Curves</a>
+      <a href="#later">After v1</a>
+    </nav>
+  </header>
+  <main>
+    <h2 id="hood">What this experiment is</h2>
+    <div class="hood">
+      <div>
+        <h3>Sees</h3>
+        <p>19 LIDAR rays from a cockpit screenshot (car hidden) plus speed from OpenPlanet. Not a full camera.</p>
+      </div>
+      <div>
+        <h3>Does</h3>
+        <p>Throttle, brake, steer on a virtual Xbox pad. One TrackMania window, 20&nbsp;Hz, map Summer 2026-01.</p>
+      </div>
+      <div>
+        <h3>Learns</h3>
+        <p>SAC. Paid for moving along a recorded road line; +100 at the finish. Trainer on GPU, policy on CPU.</p>
+      </div>
+    </div>
+    <p class="caption">LIDAR only works on black-border asphalt. Other Club maps need a new reward recording and usually a new train. Companion to <a href="https://github.com/trackmania-rl/tmrl">tmrl</a>. Public notes: <a href="https://github.com/ehubbard/trackmania-tmrl-results">trackmania-tmrl-results</a>.</p>
+    <div class="stats">
+      <div class="stat"><b>1981</b><span>Attempts</span></div>
+      <div class="stat"><b>279</b><span>Episode</span></div>
+      <div class="stat"><b>286</b><span>Peak train return</span></div>
+      <div class="stat"><b>563k</b><span>Replay samples</span></div>
+    </div>
+    
+    <aside class="callout" id="session">
+      <strong>Report 01.</strong>
+      1981 trainer rounds since the last report
+      (attempts). Mean episode length this window: 279
+      steps; mean return 39.3.
+      Log offset 1981.
+      Same continuous run; this page is only the new slice.
+    </aside>
+    
+    
+        <aside class="callout">
+          <strong>Missing epochs 0–26.</strong>
+          The source log skipped this band. Charts leave that stretch empty
+          instead of connecting epoch -1 to 27.
+        </aside>
+        
+    <div id="lap"></div>
+    <h2 id="curves">Train return</h2>
+    <p class="caption">
+      Mean return per epoch. Dashed line is the +100 finish-line bonus.
+      Values near 200 mean completed laps, not just staying on the road.
+      Source: trainer log · x = epoch.
+    </p>
+    <div class="chart">
+      
+<svg viewBox="0 0 920 280" role="img" aria-label="Train return versus Epoch">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Train return</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">128</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">257</text>
+  <line x1="56" x2="904" y1="152.7" y2="152.7" stroke="#78716c" stroke-dasharray="4 4" /><text x="900" y="146.7" text-anchor="end" class="muted tiny">Finish bonus (100)</text>
+  <path d="M 56.0,240.0 L 56.0,212.5 L 60.3,204.6 L 64.6,204.1 L 68.8,196.9 L 73.1,179.9 L 77.4,192.6 L 81.7,186.2 L 86.0,179.2 L 90.3,174.8 L 94.5,176.1 L 98.8,183.6 L 103.1,159.1 L 107.4,168.7 L 111.7,176.1 L 116.0,176.6 L 120.2,185.9 L 124.5,179.2 L 128.8,175.4 L 133.1,168.3 L 137.4,157.3 L 141.7,159.2 L 145.9,167.5 L 150.2,176.5 L 154.5,154.3 L 158.8,142.0 L 163.1,167.8 L 167.4,108.7 L 171.6,193.4 L 175.9,169.6 L 180.2,180.6 L 184.5,134.5 L 188.8,149.9 L 193.1,185.6 L 197.3,93.5 L 201.6,116.3 L 205.9,179.3 L 210.2,97.2 L 214.5,103.4 L 218.7,77.6 L 223.0,144.0 L 227.3,119.1 L 231.6,62.5 L 235.9,172.4 L 240.2,32.6 L 244.4,180.7 L 248.7,80.5 L 253.0,133.5 L 257.3,124.9 L 261.6,177.6 L 265.9,148.8 L 270.1,138.9 L 274.4,158.0 L 278.7,171.5 L 283.0,118.5 L 287.3,111.1 L 291.6,175.8 L 295.8,161.5 L 300.1,157.0 L 304.4,165.8 L 308.7,164.1 L 313.0,156.1 L 317.3,187.4 L 321.5,145.5 L 325.8,159.0 L 330.1,201.5 L 334.4,209.0 L 338.7,176.4 L 342.9,219.2 L 347.2,140.0 L 351.5,158.7 L 355.8,177.2 L 360.1,150.4 L 364.4,202.3 L 368.6,134.1 L 372.9,198.2 L 377.2,207.4 L 381.5,212.0 L 385.8,187.9 L 390.1,173.9 L 394.3,223.3 L 398.6,189.8 L 402.9,193.0 L 407.2,204.6 L 411.5,234.8 L 415.8,216.6 L 420.0,238.6 L 424.3,238.7 L 428.6,238.8 L 432.9,238.8 L 437.2,238.8 L 441.5,238.8 L 445.7,238.9 L 450.0,239.0 L 454.3,238.9 L 458.6,238.7 L 462.9,238.9 L 467.2,238.9 L 471.4,238.8 L 475.7,238.9 L 480.0,238.8 L 484.3,233.0 L 488.6,207.8 L 492.8,238.9 L 497.1,238.9 L 501.4,238.8 L 505.7,238.9 L 510.0,238.9 L 514.3,238.9 L 518.5,238.9 L 522.8,210.6 L 527.1,216.1 L 531.4,238.8 L 535.7,238.9 L 540.0,238.8 L 544.2,207.0 L 548.5,238.8 L 552.8,238.8 L 557.1,238.9 L 561.4,238.9 L 565.7,238.9 L 569.9,238.9 L 574.2,238.8 L 578.5,238.9 L 582.8,223.8 L 587.1,238.9 L 591.4,238.9 L 595.6,238.9 L 599.9,238.9 L 604.2,238.8 L 608.5,238.8 L 612.8,232.6 L 617.1,238.9 L 621.3,238.9 L 625.6,238.9 L 629.9,236.9 L 634.2,219.6 L 638.5,229.3 L 642.7,238.9 L 647.0,238.9 L 651.3,238.9 L 655.6,238.8 L 659.9,239.0 L 664.2,238.9 L 668.4,238.9 L 672.7,238.9 L 677.0,238.9 L 681.3,222.1 L 685.6,238.2 L 689.9,238.9 L 694.1,239.0 L 698.4,238.9 L 702.7,238.9 L 707.0,238.9 L 711.3,238.9 L 715.6,238.9 L 719.8,239.0 L 724.1,238.9 L 728.4,233.6 L 732.7,239.0 L 737.0,238.9 L 741.3,238.9 L 745.5,238.9 L 749.8,238.9 L 754.1,238.9 L 758.4,238.9 L 762.7,238.9 L 766.9,239.0 L 771.2,239.0 L 775.5,239.0 L 779.8,235.4 L 784.1,238.9 L 788.4,239.0 L 792.6,238.9 L 796.9,238.9 L 801.2,238.9 L 805.5,238.9 L 809.8,239.0 L 814.1,239.0 L 818.3,234.5 L 822.6,238.9 L 826.9,238.9 L 831.2,233.2 L 835.5,238.9 L 839.8,239.0 L 844.0,239.0 L 848.3,238.9 L 852.6,238.9 L 856.9,238.9 L 861.2,235.5 L 865.5,237.2 L 869.7,238.9 L 874.0,239.0 L 878.3,232.7 L 882.6,238.9 L 886.9,239.0 L 891.2,239.1 L 895.4,239.0 L 899.7,239.0 L 904.0,238.9 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" /><path d="M 56.0,212.5 L 60.3,204.6 L 64.6,204.1 L 68.8,196.9 L 73.1,179.9 L 77.4,192.6 L 81.7,186.2 L 86.0,179.2 L 90.3,174.8 L 94.5,176.1 L 98.8,183.6 L 103.1,159.1 L 107.4,168.7 L 111.7,176.1 L 116.0,176.6 L 120.2,185.9 L 124.5,179.2 L 128.8,175.4 L 133.1,168.3 L 137.4,157.3 L 141.7,159.2 L 145.9,167.5 L 150.2,176.5 L 154.5,154.3 L 158.8,142.0 L 163.1,167.8 L 167.4,108.7 L 171.6,193.4 L 175.9,169.6 L 180.2,180.6 L 184.5,134.5 L 188.8,149.9 L 193.1,185.6 L 197.3,93.5 L 201.6,116.3 L 205.9,179.3 L 210.2,97.2 L 214.5,103.4 L 218.7,77.6 L 223.0,144.0 L 227.3,119.1 L 231.6,62.5 L 235.9,172.4 L 240.2,32.6 L 244.4,180.7 L 248.7,80.5 L 253.0,133.5 L 257.3,124.9 L 261.6,177.6 L 265.9,148.8 L 270.1,138.9 L 274.4,158.0 L 278.7,171.5 L 283.0,118.5 L 287.3,111.1 L 291.6,175.8 L 295.8,161.5 L 300.1,157.0 L 304.4,165.8 L 308.7,164.1 L 313.0,156.1 L 317.3,187.4 L 321.5,145.5 L 325.8,159.0 L 330.1,201.5 L 334.4,209.0 L 338.7,176.4 L 342.9,219.2 L 347.2,140.0 L 351.5,158.7 L 355.8,177.2 L 360.1,150.4 L 364.4,202.3 L 368.6,134.1 L 372.9,198.2 L 377.2,207.4 L 381.5,212.0 L 385.8,187.9 L 390.1,173.9 L 394.3,223.3 L 398.6,189.8 L 402.9,193.0 L 407.2,204.6 L 411.5,234.8 L 415.8,216.6 L 420.0,238.6 L 424.3,238.7 L 428.6,238.8 L 432.9,238.8 L 437.2,238.8 L 441.5,238.8 L 445.7,238.9 L 450.0,239.0 L 454.3,238.9 L 458.6,238.7 L 462.9,238.9 L 467.2,238.9 L 471.4,238.8 L 475.7,238.9 L 480.0,238.8 L 484.3,233.0 L 488.6,207.8 L 492.8,238.9 L 497.1,238.9 L 501.4,238.8 L 505.7,238.9 L 510.0,238.9 L 514.3,238.9 L 518.5,238.9 L 522.8,210.6 L 527.1,216.1 L 531.4,238.8 L 535.7,238.9 L 540.0,238.8 L 544.2,207.0 L 548.5,238.8 L 552.8,238.8 L 557.1,238.9 L 561.4,238.9 L 565.7,238.9 L 569.9,238.9 L 574.2,238.8 L 578.5,238.9 L 582.8,223.8 L 587.1,238.9 L 591.4,238.9 L 595.6,238.9 L 599.9,238.9 L 604.2,238.8 L 608.5,238.8 L 612.8,232.6 L 617.1,238.9 L 621.3,238.9 L 625.6,238.9 L 629.9,236.9 L 634.2,219.6 L 638.5,229.3 L 642.7,238.9 L 647.0,238.9 L 651.3,238.9 L 655.6,238.8 L 659.9,239.0 L 664.2,238.9 L 668.4,238.9 L 672.7,238.9 L 677.0,238.9 L 681.3,222.1 L 685.6,238.2 L 689.9,238.9 L 694.1,239.0 L 698.4,238.9 L 702.7,238.9 L 707.0,238.9 L 711.3,238.9 L 715.6,238.9 L 719.8,239.0 L 724.1,238.9 L 728.4,233.6 L 732.7,239.0 L 737.0,238.9 L 741.3,238.9 L 745.5,238.9 L 749.8,238.9 L 754.1,238.9 L 758.4,238.9 L 762.7,238.9 L 766.9,239.0 L 771.2,239.0 L 775.5,239.0 L 779.8,235.4 L 784.1,238.9 L 788.4,239.0 L 792.6,238.9 L 796.9,238.9 L 801.2,238.9 L 805.5,238.9 L 809.8,239.0 L 814.1,239.0 L 818.3,234.5 L 822.6,238.9 L 826.9,238.9 L 831.2,233.2 L 835.5,238.9 L 839.8,239.0 L 844.0,239.0 L 848.3,238.9 L 852.6,238.9 L 856.9,238.9 L 861.2,235.5 L 865.5,237.2 L 869.7,238.9 L 874.0,239.0 L 878.3,232.7 L 882.6,238.9 L 886.9,239.0 L 891.2,239.1 L 895.4,239.0 L 899.7,239.0 L 904.0,238.9" fill="none" stroke="#c2410c" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">27</text><text x="368.6" y="268" text-anchor="middle" class="muted tiny">100</text><text x="582.8" y="268" text-anchor="middle" class="muted tiny">150</text><text x="762.7" y="268" text-anchor="middle" class="muted tiny">192</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">225</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Epoch</text>
+</svg>
+
+    </div>
+    <h2>Episode length</h2>
+    <p class="caption">
+      Environment steps before crash, stray, or timeout. ~80 is a spin-out.
+      1000 is the configured cap — pinning there means the episode finished.
+      Source: trainer log · x = epoch.
+    </p>
+    <div class="chart">
+      
+<svg viewBox="0 0 920 280" role="img" aria-label="Episode length (steps) versus Epoch">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Episode length (steps)</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">500</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">1000</text>
+  <line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#78716c" stroke-dasharray="4 4" /><text x="900" y="10.0" text-anchor="end" class="muted tiny">Episode cap</text>
+  <path d="M 56.0,240.0 L 56.0,154.8 L 60.3,136.7 L 64.6,154.4 L 68.8,133.3 L 73.1,104.4 L 77.4,147.1 L 81.7,145.4 L 86.0,132.8 L 90.3,94.0 L 94.5,133.3 L 98.8,156.9 L 103.1,102.1 L 107.4,128.0 L 111.7,143.4 L 116.0,151.5 L 120.2,163.0 L 124.5,151.9 L 128.8,147.5 L 133.1,146.4 L 137.4,101.7 L 141.7,129.0 L 145.9,139.9 L 150.2,147.2 L 154.5,109.6 L 158.8,101.0 L 163.1,129.4 L 167.4,113.3 L 171.6,173.4 L 175.9,137.1 L 180.2,160.4 L 184.5,118.4 L 188.8,107.8 L 193.1,158.0 L 197.3,86.7 L 201.6,98.1 L 205.9,170.1 L 210.2,112.1 L 214.5,109.9 L 218.7,64.6 L 223.0,107.3 L 227.3,116.2 L 231.6,50.0 L 235.9,134.4 L 240.2,54.2 L 244.4,141.1 L 248.7,61.5 L 253.0,62.6 L 257.3,56.3 L 261.6,140.6 L 265.9,89.9 L 270.1,75.8 L 274.4,95.5 L 278.7,126.8 L 283.0,51.0 L 287.3,42.1 L 291.6,121.8 L 295.8,91.0 L 300.1,107.2 L 304.4,117.7 L 308.7,106.2 L 313.0,87.2 L 317.3,147.9 L 321.5,82.5 L 325.8,105.4 L 330.1,171.6 L 334.4,176.2 L 338.7,133.7 L 342.9,194.4 L 347.2,80.3 L 351.5,107.8 L 355.8,135.2 L 360.1,91.7 L 364.4,173.3 L 368.6,69.7 L 372.9,146.1 L 377.2,175.8 L 381.5,177.8 L 385.8,125.4 L 390.1,117.5 L 394.3,191.1 L 398.6,146.4 L 402.9,157.6 L 407.2,165.6 L 411.5,216.7 L 415.8,189.5 L 420.0,221.6 L 424.3,221.7 L 428.6,221.6 L 432.9,221.8 L 437.2,221.8 L 441.5,221.5 L 445.7,220.8 L 450.0,221.5 L 454.3,221.5 L 458.6,221.0 L 462.9,221.7 L 467.2,221.4 L 471.4,221.2 L 475.7,221.9 L 480.0,221.2 L 484.3,212.3 L 488.6,173.9 L 492.8,220.7 L 497.1,221.4 L 501.4,221.5 L 505.7,221.3 L 510.0,221.7 L 514.3,219.9 L 518.5,221.3 L 522.8,179.2 L 527.1,184.0 L 531.4,221.5 L 535.7,221.2 L 540.0,221.8 L 544.2,170.4 L 548.5,221.4 L 552.8,221.5 L 557.1,221.7 L 561.4,221.3 L 565.7,221.4 L 569.9,221.5 L 574.2,221.1 L 578.5,221.2 L 582.8,197.0 L 587.1,220.9 L 591.4,221.1 L 595.6,221.3 L 599.9,221.1 L 604.2,221.5 L 608.5,221.6 L 612.8,206.7 L 617.1,220.3 L 621.3,220.8 L 625.6,220.9 L 629.9,217.4 L 634.2,181.2 L 638.5,203.6 L 642.7,221.6 L 647.0,221.4 L 651.3,220.7 L 655.6,221.3 L 659.9,219.7 L 664.2,221.1 L 668.4,220.9 L 672.7,221.3 L 677.0,221.5 L 681.3,187.4 L 685.6,185.2 L 689.9,221.2 L 694.1,219.4 L 698.4,220.4 L 702.7,220.5 L 707.0,219.9 L 711.3,220.7 L 715.6,220.7 L 719.8,220.5 L 724.1,220.8 L 728.4,212.4 L 732.7,219.5 L 737.0,221.6 L 741.3,220.1 L 745.5,221.2 L 749.8,221.1 L 754.1,220.3 L 758.4,221.1 L 762.7,220.3 L 766.9,221.0 L 771.2,219.6 L 775.5,221.0 L 779.8,214.6 L 784.1,220.9 L 788.4,221.2 L 792.6,221.5 L 796.9,221.3 L 801.2,221.0 L 805.5,221.3 L 809.8,220.1 L 814.1,220.3 L 818.3,215.6 L 822.6,219.8 L 826.9,219.7 L 831.2,209.6 L 835.5,220.0 L 839.8,220.7 L 844.0,218.7 L 848.3,218.8 L 852.6,220.4 L 856.9,219.8 L 861.2,214.6 L 865.5,217.2 L 869.7,220.7 L 874.0,219.2 L 878.3,208.2 L 882.6,219.7 L 886.9,218.4 L 891.2,219.3 L 895.4,218.4 L 899.7,220.0 L 904.0,220.9 L 904.0,240.0 Z" fill="#0f766e" fill-opacity="0.12" stroke="none" /><path d="M 56.0,154.8 L 60.3,136.7 L 64.6,154.4 L 68.8,133.3 L 73.1,104.4 L 77.4,147.1 L 81.7,145.4 L 86.0,132.8 L 90.3,94.0 L 94.5,133.3 L 98.8,156.9 L 103.1,102.1 L 107.4,128.0 L 111.7,143.4 L 116.0,151.5 L 120.2,163.0 L 124.5,151.9 L 128.8,147.5 L 133.1,146.4 L 137.4,101.7 L 141.7,129.0 L 145.9,139.9 L 150.2,147.2 L 154.5,109.6 L 158.8,101.0 L 163.1,129.4 L 167.4,113.3 L 171.6,173.4 L 175.9,137.1 L 180.2,160.4 L 184.5,118.4 L 188.8,107.8 L 193.1,158.0 L 197.3,86.7 L 201.6,98.1 L 205.9,170.1 L 210.2,112.1 L 214.5,109.9 L 218.7,64.6 L 223.0,107.3 L 227.3,116.2 L 231.6,50.0 L 235.9,134.4 L 240.2,54.2 L 244.4,141.1 L 248.7,61.5 L 253.0,62.6 L 257.3,56.3 L 261.6,140.6 L 265.9,89.9 L 270.1,75.8 L 274.4,95.5 L 278.7,126.8 L 283.0,51.0 L 287.3,42.1 L 291.6,121.8 L 295.8,91.0 L 300.1,107.2 L 304.4,117.7 L 308.7,106.2 L 313.0,87.2 L 317.3,147.9 L 321.5,82.5 L 325.8,105.4 L 330.1,171.6 L 334.4,176.2 L 338.7,133.7 L 342.9,194.4 L 347.2,80.3 L 351.5,107.8 L 355.8,135.2 L 360.1,91.7 L 364.4,173.3 L 368.6,69.7 L 372.9,146.1 L 377.2,175.8 L 381.5,177.8 L 385.8,125.4 L 390.1,117.5 L 394.3,191.1 L 398.6,146.4 L 402.9,157.6 L 407.2,165.6 L 411.5,216.7 L 415.8,189.5 L 420.0,221.6 L 424.3,221.7 L 428.6,221.6 L 432.9,221.8 L 437.2,221.8 L 441.5,221.5 L 445.7,220.8 L 450.0,221.5 L 454.3,221.5 L 458.6,221.0 L 462.9,221.7 L 467.2,221.4 L 471.4,221.2 L 475.7,221.9 L 480.0,221.2 L 484.3,212.3 L 488.6,173.9 L 492.8,220.7 L 497.1,221.4 L 501.4,221.5 L 505.7,221.3 L 510.0,221.7 L 514.3,219.9 L 518.5,221.3 L 522.8,179.2 L 527.1,184.0 L 531.4,221.5 L 535.7,221.2 L 540.0,221.8 L 544.2,170.4 L 548.5,221.4 L 552.8,221.5 L 557.1,221.7 L 561.4,221.3 L 565.7,221.4 L 569.9,221.5 L 574.2,221.1 L 578.5,221.2 L 582.8,197.0 L 587.1,220.9 L 591.4,221.1 L 595.6,221.3 L 599.9,221.1 L 604.2,221.5 L 608.5,221.6 L 612.8,206.7 L 617.1,220.3 L 621.3,220.8 L 625.6,220.9 L 629.9,217.4 L 634.2,181.2 L 638.5,203.6 L 642.7,221.6 L 647.0,221.4 L 651.3,220.7 L 655.6,221.3 L 659.9,219.7 L 664.2,221.1 L 668.4,220.9 L 672.7,221.3 L 677.0,221.5 L 681.3,187.4 L 685.6,185.2 L 689.9,221.2 L 694.1,219.4 L 698.4,220.4 L 702.7,220.5 L 707.0,219.9 L 711.3,220.7 L 715.6,220.7 L 719.8,220.5 L 724.1,220.8 L 728.4,212.4 L 732.7,219.5 L 737.0,221.6 L 741.3,220.1 L 745.5,221.2 L 749.8,221.1 L 754.1,220.3 L 758.4,221.1 L 762.7,220.3 L 766.9,221.0 L 771.2,219.6 L 775.5,221.0 L 779.8,214.6 L 784.1,220.9 L 788.4,221.2 L 792.6,221.5 L 796.9,221.3 L 801.2,221.0 L 805.5,221.3 L 809.8,220.1 L 814.1,220.3 L 818.3,215.6 L 822.6,219.8 L 826.9,219.7 L 831.2,209.6 L 835.5,220.0 L 839.8,220.7 L 844.0,218.7 L 848.3,218.8 L 852.6,220.4 L 856.9,219.8 L 861.2,214.6 L 865.5,217.2 L 869.7,220.7 L 874.0,219.2 L 878.3,208.2 L 882.6,219.7 L 886.9,218.4 L 891.2,219.3 L 895.4,218.4 L 899.7,220.0 L 904.0,220.9" fill="none" stroke="#0f766e" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">27</text><text x="368.6" y="268" text-anchor="middle" class="muted tiny">100</text><text x="582.8" y="268" text-anchor="middle" class="muted tiny">150</text><text x="762.7" y="268" text-anchor="middle" class="muted tiny">192</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">225</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Epoch</text>
+</svg>
+
+    </div>
+    
+    <h2>Milestones</h2>
+    <table>
+      <thead><tr><th>What changed</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>First return ≥ 10</td><td>epoch 27 · return 38.4 · length 524</td></tr>
+        <tr><td>First episode ≥ 500 steps</td><td>epoch 27 · return 38.4 · length 524</td></tr>
+        <tr><td>First full-length episode</td><td>epoch 31 · return 99.3 · length 1000</td></tr>
+        <tr><td>Return ≥ 200 (laps)</td><td>epoch 53 · return 207.9 · length 730</td></tr>
+        <tr><td>End of run</td><td>epoch 225 · return 1.3 · length 85</td></tr>
+      </tbody>
+    </table>
+    <h2>Replay buffer</h2>
+    <p class="caption">Samples stored for training. Only goes up. The GPU was rarely the limit — one game at 20 FPS was. Units: samples.</p>
+    <div class="chart">
+      
+<svg viewBox="0 0 920 280" role="img" aria-label="Replay memory (samples) versus Epoch">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Replay memory (samples)</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">303892</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">607784</text>
+  
+  <path d="M 56.0,240.0 L 56.0,214.6 L 60.3,213.6 L 64.6,212.7 L 68.8,211.8 L 73.1,210.8 L 77.4,209.9 L 81.7,209.0 L 86.0,208.1 L 90.3,207.1 L 94.5,206.2 L 98.8,205.3 L 103.1,204.3 L 107.4,203.4 L 111.7,202.6 L 116.0,201.6 L 120.2,200.7 L 124.5,199.8 L 128.8,198.9 L 133.1,197.9 L 137.4,197.0 L 141.7,196.1 L 145.9,195.2 L 150.2,194.3 L 154.5,193.3 L 158.8,192.4 L 163.1,191.5 L 167.4,190.5 L 171.6,189.7 L 175.9,188.7 L 180.2,187.8 L 184.5,186.9 L 188.8,185.9 L 193.1,185.1 L 197.3,184.1 L 201.6,183.1 L 205.9,182.2 L 210.2,181.3 L 214.5,180.4 L 218.7,179.4 L 223.0,178.6 L 227.3,177.6 L 231.6,176.6 L 235.9,175.8 L 240.2,174.8 L 244.4,173.9 L 248.7,173.0 L 253.0,172.1 L 257.3,171.1 L 261.6,170.2 L 265.9,169.3 L 270.1,168.4 L 274.4,167.5 L 278.7,166.6 L 283.0,165.6 L 287.3,164.7 L 291.6,163.8 L 295.8,162.8 L 300.1,161.9 L 304.4,161.0 L 308.7,160.1 L 313.0,159.2 L 317.3,158.3 L 321.5,157.3 L 325.8,156.4 L 330.1,155.5 L 334.4,154.6 L 338.7,153.6 L 342.9,152.8 L 347.2,151.8 L 351.5,150.9 L 355.8,150.0 L 360.1,149.0 L 364.4,148.1 L 368.6,147.2 L 372.9,146.3 L 377.2,145.4 L 381.5,144.5 L 385.8,143.5 L 390.1,142.6 L 394.3,141.7 L 398.6,140.8 L 402.9,139.9 L 407.2,138.9 L 411.5,138.1 L 415.8,137.1 L 420.0,136.3 L 424.3,135.4 L 428.6,134.5 L 432.9,133.5 L 437.2,132.6 L 441.5,131.7 L 445.7,130.8 L 450.0,129.8 L 454.3,128.9 L 458.6,128.0 L 462.9,127.1 L 467.2,126.1 L 471.4,125.2 L 475.7,124.3 L 480.0,123.4 L 484.3,122.4 L 488.6,121.5 L 492.8,120.6 L 497.1,119.7 L 501.4,118.8 L 505.7,117.8 L 510.0,116.9 L 514.3,116.0 L 518.5,115.1 L 522.8,114.1 L 527.1,113.2 L 531.4,112.3 L 535.7,111.4 L 540.0,110.5 L 544.2,109.5 L 548.5,108.6 L 552.8,107.7 L 557.1,106.8 L 561.4,105.9 L 565.7,105.0 L 569.9,104.0 L 574.2,103.1 L 578.5,102.2 L 582.8,101.2 L 587.1,100.3 L 591.4,99.4 L 595.6,98.5 L 599.9,97.6 L 604.2,96.7 L 608.5,95.8 L 612.8,94.8 L 617.1,93.9 L 621.3,93.0 L 625.6,92.1 L 629.9,91.1 L 634.2,90.1 L 638.5,89.2 L 642.7,88.4 L 647.0,87.5 L 651.3,86.5 L 655.6,85.6 L 659.9,84.7 L 664.2,83.8 L 668.4,82.8 L 672.7,81.9 L 677.0,81.0 L 681.3,80.0 L 685.6,79.1 L 689.9,78.2 L 694.1,77.3 L 698.4,76.4 L 702.7,75.5 L 707.0,74.6 L 711.3,73.6 L 715.6,72.7 L 719.8,71.8 L 724.1,70.9 L 728.4,69.9 L 732.7,69.0 L 737.0,68.1 L 741.3,67.2 L 745.5,66.3 L 749.8,65.3 L 754.1,64.4 L 758.4,63.5 L 762.7,62.6 L 766.9,61.6 L 771.2,60.7 L 775.5,59.8 L 779.8,58.9 L 784.1,58.0 L 788.4,57.0 L 792.6,56.1 L 796.9,55.2 L 801.2,54.3 L 805.5,53.3 L 809.8,52.4 L 814.1,51.5 L 818.3,50.6 L 822.6,49.7 L 826.9,48.8 L 831.2,47.8 L 835.5,46.9 L 839.8,46.0 L 844.0,45.1 L 848.3,44.2 L 852.6,43.2 L 856.9,42.3 L 861.2,41.4 L 865.5,40.5 L 869.7,39.5 L 874.0,38.6 L 878.3,37.7 L 882.6,36.8 L 886.9,35.9 L 891.2,34.9 L 895.4,34.0 L 899.7,33.1 L 904.0,32.6 L 904.0,240.0 Z" fill="#44403c" fill-opacity="0.12" stroke="none" /><path d="M 56.0,214.6 L 60.3,213.6 L 64.6,212.7 L 68.8,211.8 L 73.1,210.8 L 77.4,209.9 L 81.7,209.0 L 86.0,208.1 L 90.3,207.1 L 94.5,206.2 L 98.8,205.3 L 103.1,204.3 L 107.4,203.4 L 111.7,202.6 L 116.0,201.6 L 120.2,200.7 L 124.5,199.8 L 128.8,198.9 L 133.1,197.9 L 137.4,197.0 L 141.7,196.1 L 145.9,195.2 L 150.2,194.3 L 154.5,193.3 L 158.8,192.4 L 163.1,191.5 L 167.4,190.5 L 171.6,189.7 L 175.9,188.7 L 180.2,187.8 L 184.5,186.9 L 188.8,185.9 L 193.1,185.1 L 197.3,184.1 L 201.6,183.1 L 205.9,182.2 L 210.2,181.3 L 214.5,180.4 L 218.7,179.4 L 223.0,178.6 L 227.3,177.6 L 231.6,176.6 L 235.9,175.8 L 240.2,174.8 L 244.4,173.9 L 248.7,173.0 L 253.0,172.1 L 257.3,171.1 L 261.6,170.2 L 265.9,169.3 L 270.1,168.4 L 274.4,167.5 L 278.7,166.6 L 283.0,165.6 L 287.3,164.7 L 291.6,163.8 L 295.8,162.8 L 300.1,161.9 L 304.4,161.0 L 308.7,160.1 L 313.0,159.2 L 317.3,158.3 L 321.5,157.3 L 325.8,156.4 L 330.1,155.5 L 334.4,154.6 L 338.7,153.6 L 342.9,152.8 L 347.2,151.8 L 351.5,150.9 L 355.8,150.0 L 360.1,149.0 L 364.4,148.1 L 368.6,147.2 L 372.9,146.3 L 377.2,145.4 L 381.5,144.5 L 385.8,143.5 L 390.1,142.6 L 394.3,141.7 L 398.6,140.8 L 402.9,139.9 L 407.2,138.9 L 411.5,138.1 L 415.8,137.1 L 420.0,136.3 L 424.3,135.4 L 428.6,134.5 L 432.9,133.5 L 437.2,132.6 L 441.5,131.7 L 445.7,130.8 L 450.0,129.8 L 454.3,128.9 L 458.6,128.0 L 462.9,127.1 L 467.2,126.1 L 471.4,125.2 L 475.7,124.3 L 480.0,123.4 L 484.3,122.4 L 488.6,121.5 L 492.8,120.6 L 497.1,119.7 L 501.4,118.8 L 505.7,117.8 L 510.0,116.9 L 514.3,116.0 L 518.5,115.1 L 522.8,114.1 L 527.1,113.2 L 531.4,112.3 L 535.7,111.4 L 540.0,110.5 L 544.2,109.5 L 548.5,108.6 L 552.8,107.7 L 557.1,106.8 L 561.4,105.9 L 565.7,105.0 L 569.9,104.0 L 574.2,103.1 L 578.5,102.2 L 582.8,101.2 L 587.1,100.3 L 591.4,99.4 L 595.6,98.5 L 599.9,97.6 L 604.2,96.7 L 608.5,95.8 L 612.8,94.8 L 617.1,93.9 L 621.3,93.0 L 625.6,92.1 L 629.9,91.1 L 634.2,90.1 L 638.5,89.2 L 642.7,88.4 L 647.0,87.5 L 651.3,86.5 L 655.6,85.6 L 659.9,84.7 L 664.2,83.8 L 668.4,82.8 L 672.7,81.9 L 677.0,81.0 L 681.3,80.0 L 685.6,79.1 L 689.9,78.2 L 694.1,77.3 L 698.4,76.4 L 702.7,75.5 L 707.0,74.6 L 711.3,73.6 L 715.6,72.7 L 719.8,71.8 L 724.1,70.9 L 728.4,69.9 L 732.7,69.0 L 737.0,68.1 L 741.3,67.2 L 745.5,66.3 L 749.8,65.3 L 754.1,64.4 L 758.4,63.5 L 762.7,62.6 L 766.9,61.6 L 771.2,60.7 L 775.5,59.8 L 779.8,58.9 L 784.1,58.0 L 788.4,57.0 L 792.6,56.1 L 796.9,55.2 L 801.2,54.3 L 805.5,53.3 L 809.8,52.4 L 814.1,51.5 L 818.3,50.6 L 822.6,49.7 L 826.9,48.8 L 831.2,47.8 L 835.5,46.9 L 839.8,46.0 L 844.0,45.1 L 848.3,44.2 L 852.6,43.2 L 856.9,42.3 L 861.2,41.4 L 865.5,40.5 L 869.7,39.5 L 874.0,38.6 L 878.3,37.7 L 882.6,36.8 L 886.9,35.9 L 891.2,34.9 L 895.4,34.0 L 899.7,33.1 L 904.0,32.6" fill="none" stroke="#44403c" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">27</text><text x="368.6" y="268" text-anchor="middle" class="muted tiny">100</text><text x="582.8" y="268" text-anchor="middle" class="muted tiny">150</text><text x="762.7" y="268" text-anchor="middle" class="muted tiny">192</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">225</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Epoch</text>
+</svg>
+
+    </div>
+    
+    <h2 id="later">Next report</h2>
+    <p>
+      Training can keep going. Ask for another report when you want an update;
+      it will only chart rounds collected since this page.
+    </p>
+
+    <footer>
+      Generated from 1981 trainer rounds
+      .
+      Companion to <a href="https://github.com/trackmania-rl/tmrl">tmrl</a>, not a replacement.
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrackMania training progress: Summer 2026-01 · Report 01 · Attempts 309 · Episode 364</title>
+  <style>
+    :root {
+      --bg: #fafaf9;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e5e4;
+      --accent: #c2410c;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.5 "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    }
+    header, main { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    header { padding-top: 48px; padding-bottom: 8px; }
+    h1 { font-size: 2.1rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+    h2 { font-size: 1.25rem; margin: 40px 0 12px; }
+    p.lead { color: var(--muted); margin: 0 0 24px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+    .stat { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .stat b { display: block; font-size: 1.6rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .stat span { color: var(--muted); font-size: 0.85rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: #fff7ed;
+      padding: 12px 16px;
+      margin: 16px 0 28px;
+    }
+    .slot {
+      border-left: 3px solid #a8a29e;
+      background: #f5f5f4;
+      padding: 12px 16px;
+      margin: 8px 0 28px;
+      color: var(--muted);
+    }
+    .hood { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 8px 0 28px; }
+    .hood div { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .hood h3 { margin: 0 0 6px; font-size: 1rem; }
+    nav { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+    nav a { color: var(--muted); margin-right: 14px; }
+    .chart {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 12px 8px 0;
+      margin: 8px 0 28px;
+    }
+    .caption { color: var(--muted); font-size: 0.85rem; margin: 0 0 8px; }
+    .phases { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .phase { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .phase h3 { margin: 0 0 4px; font-size: 1rem; }
+    .phase .when { color: var(--muted); font-size: 0.8rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    table { width: 100%; border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.95rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 500; }
+    svg { width: 100%; height: auto; display: block; }
+    .muted { fill: #78716c; color: #78716c; }
+    .tiny { font: 11px ui-sans-serif, system-ui, sans-serif; }
+    .lap { display: grid; gap: 12px; margin: 8px 0 28px; }
+    .lap-video { width: 100%; background: #000; }
+    .lap-film { width: 100%; background: #111; display: block; }
+    .lap-stage { background: var(--card); border: 1px solid var(--line); }
+    .lap-hud {
+      display: flex; gap: 16px; align-items: center;
+      padding: 8px 12px; font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.9rem; border-top: 1px solid var(--line);
+    }
+    .lap-hud button {
+      margin-left: auto; background: var(--ink); color: #fff;
+      border: 0; padding: 4px 12px; cursor: pointer;
+    }
+    footer { color: var(--muted); font-size: 0.9rem; margin: 48px 0 64px; }
+    a { color: var(--accent); }
+    @media (max-width: 720px) {
+      .stats, .phases, .hood { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats, .phases, .hood { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TrackMania training progress: Summer 2026-01 · Report 01 · Attempts 309 · Episode 364</h1>
+    <p class="lead">
+      Summer 2026-01 · SAC_4_LIDAR_summer2026_01_v2 · TM20LIDAR · SAC · report 01 · 309 attempts since last report · mean episode 364 steps · epochs 0–30.
+    </p>
+    
+    <p class="caption" id="legend">
+      <strong>Attempts</strong> are trainer rounds in this slice (the unit the log
+      counts), not laps.
+      <strong>Episode</strong> is mean <code>episode_length_train</code> in that
+      slice, in environment steps. 1000 is the episode cap — pinning there usually
+      means a finish. Neither figure is an official TrackMania lap time.
+    </p>
+    
+    <nav>
+      <a href="#hood">Under the hood</a>
+      <a href="#lap">The car</a>
+      <a href="#curves">Curves</a>
+      <a href="#later">After v1</a>
+    </nav>
+  </header>
+  <main>
+    <h2 id="hood">What this experiment is</h2>
+    <div class="hood">
+      <div>
+        <h3>Sees</h3>
+        <p>19 LIDAR rays from a cockpit screenshot (car hidden) plus speed from OpenPlanet. Not a full camera.</p>
+      </div>
+      <div>
+        <h3>Does</h3>
+        <p>Throttle, brake, steer on a virtual Xbox pad. One TrackMania window, 20&nbsp;Hz, map Summer 2026-01.</p>
+      </div>
+      <div>
+        <h3>Learns</h3>
+        <p>SAC. Paid for moving along a recorded road line; +100 at the finish. Trainer on GPU, policy on CPU.</p>
+      </div>
+    </div>
+    <p class="caption">LIDAR only works on black-border asphalt. Other Club maps need a new reward recording and usually a new train. Companion to <a href="https://github.com/trackmania-rl/tmrl">tmrl</a>. Public notes: <a href="https://github.com/ehubbard/trackmania-tmrl-results">trackmania-tmrl-results</a>.</p>
+    <div class="stats">
+      <div class="stat"><b>309</b><span>Attempts</span></div>
+      <div class="stat"><b>364</b><span>Episode</span></div>
+      <div class="stat"><b>116</b><span>Peak train return</span></div>
+      <div class="stat"><b>78k</b><span>Replay samples</span></div>
+    </div>
+    
+    <aside class="callout" id="session">
+      <strong>Report 01.</strong>
+      309 trainer rounds since the last report
+      (attempts). Mean episode length this window: 364
+      steps; mean return 56.8.
+      Log offset 309.
+      Same continuous run; this page is only the new slice.
+    </aside>
+    
+    
+    <div id="lap"></div>
+    <h2 id="curves">Train return</h2>
+    <p class="caption">
+      Mean return per epoch. Dashed line is the +100 finish-line bonus.
+      Values near 200 mean completed laps, not just staying on the road.
+      Source: trainer log · x = epoch.
+    </p>
+    <div class="chart">
+      
+<svg viewBox="0 0 920 280" role="img" aria-label="Train return versus Epoch">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Train return</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">46</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">91</text>
+  <line x1="56" x2="904" y1="-6.1" y2="-6.1" stroke="#78716c" stroke-dasharray="4 4" /><text x="900" y="-12.1" text-anchor="end" class="muted tiny">Finish bonus (100)</text>
+  <path d="M 56.0,240.0 L 56.0,194.8 L 84.3,154.8 L 112.5,193.4 L 140.8,156.8 L 169.1,107.8 L 197.3,32.6 L 225.6,94.0 L 253.9,97.2 L 282.1,129.4 L 310.4,69.6 L 338.7,127.9 L 366.9,107.6 L 395.2,102.7 L 423.5,93.4 L 451.7,79.9 L 480.0,107.5 L 508.3,71.2 L 536.5,68.3 L 564.8,71.8 L 593.1,116.2 L 621.3,102.3 L 649.6,62.0 L 677.9,56.6 L 706.1,70.9 L 734.4,74.4 L 762.7,115.5 L 790.9,78.0 L 819.2,55.4 L 847.5,78.7 L 875.7,114.3 L 904.0,121.7 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" /><path d="M 56.0,194.8 L 84.3,154.8 L 112.5,193.4 L 140.8,156.8 L 169.1,107.8 L 197.3,32.6 L 225.6,94.0 L 253.9,97.2 L 282.1,129.4 L 310.4,69.6 L 338.7,127.9 L 366.9,107.6 L 395.2,102.7 L 423.5,93.4 L 451.7,79.9 L 480.0,107.5 L 508.3,71.2 L 536.5,68.3 L 564.8,71.8 L 593.1,116.2 L 621.3,102.3 L 649.6,62.0 L 677.9,56.6 L 706.1,70.9 L 734.4,74.4 L 762.7,115.5 L 790.9,78.0 L 819.2,55.4 L 847.5,78.7 L 875.7,114.3 L 904.0,121.7" fill="none" stroke="#c2410c" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">0</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">30</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Epoch</text>
+</svg>
+
+    </div>
+    <h2>Episode length</h2>
+    <p class="caption">
+      Environment steps before crash, stray, or timeout. ~80 is a spin-out.
+      1000 is the configured cap — pinning there means the episode finished.
+      Source: trainer log · x = epoch.
+    </p>
+    <div class="chart">
+      
+<svg viewBox="0 0 920 280" role="img" aria-label="Episode length (steps) versus Epoch">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Episode length (steps)</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">500</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">1000</text>
+  <line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#78716c" stroke-dasharray="4 4" /><text x="900" y="10.0" text-anchor="end" class="muted tiny">Episode cap</text>
+  <path d="M 56.0,240.0 L 56.0,203.3 L 84.3,153.8 L 112.5,186.7 L 140.8,148.3 L 169.1,130.9 L 197.3,116.2 L 225.6,162.0 L 253.9,159.4 L 282.1,175.0 L 310.4,151.6 L 338.7,173.8 L 366.9,166.8 L 395.2,151.0 L 423.5,144.1 L 451.7,154.1 L 480.0,166.4 L 508.3,140.8 L 536.5,148.5 L 564.8,160.8 L 593.1,167.7 L 621.3,168.9 L 649.6,142.4 L 677.9,152.6 L 706.1,155.5 L 734.4,151.6 L 762.7,173.8 L 790.9,155.7 L 819.2,145.6 L 847.5,149.3 L 875.7,175.2 L 904.0,181.9 L 904.0,240.0 Z" fill="#0f766e" fill-opacity="0.12" stroke="none" /><path d="M 56.0,203.3 L 84.3,153.8 L 112.5,186.7 L 140.8,148.3 L 169.1,130.9 L 197.3,116.2 L 225.6,162.0 L 253.9,159.4 L 282.1,175.0 L 310.4,151.6 L 338.7,173.8 L 366.9,166.8 L 395.2,151.0 L 423.5,144.1 L 451.7,154.1 L 480.0,166.4 L 508.3,140.8 L 536.5,148.5 L 564.8,160.8 L 593.1,167.7 L 621.3,168.9 L 649.6,142.4 L 677.9,152.6 L 706.1,155.5 L 734.4,151.6 L 762.7,173.8 L 790.9,155.7 L 819.2,145.6 L 847.5,149.3 L 875.7,175.2 L 904.0,181.9" fill="none" stroke="#0f766e" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">0</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">30</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Epoch</text>
+</svg>
+
+    </div>
+    
+    <h2>Milestones</h2>
+    <table>
+      <thead><tr><th>What changed</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>First return ≥ 10</td><td>epoch 0 · return 45.9 · length 284</td></tr>
+        <tr><td>First episode ≥ 500 steps</td><td>epoch 1 · return 102.9 · length 1000</td></tr>
+        <tr><td>First full-length episode</td><td>epoch 1 · return 102.9 · length 1000</td></tr>
+        <tr><td>Return ≥ 200 (laps)</td><td>—</td></tr>
+        <tr><td>End of run</td><td>epoch 30 · return 62.2 · length 305</td></tr>
+      </tbody>
+    </table>
+    <h2>Replay buffer</h2>
+    <p class="caption">Samples stored for training. Only goes up. The GPU was rarely the limit — one game at 20 FPS was. Units: samples.</p>
+    <div class="chart">
+      
+<svg viewBox="0 0 920 280" role="img" aria-label="Replay memory (samples) versus Epoch">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Replay memory (samples)</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">41288</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">82577</text>
+  
+  <path d="M 56.0,240.0 L 56.0,235.1 L 84.3,228.7 L 112.5,222.1 L 140.8,215.3 L 169.1,208.5 L 197.3,201.5 L 225.6,195.2 L 253.9,188.3 L 282.1,181.7 L 310.4,174.7 L 338.7,168.1 L 366.9,161.3 L 395.2,154.4 L 423.5,147.4 L 451.7,141.0 L 480.0,134.1 L 508.3,127.1 L 536.5,120.4 L 564.8,113.6 L 593.1,107.0 L 621.3,100.1 L 649.6,93.3 L 677.9,86.6 L 706.1,79.8 L 734.4,73.0 L 762.7,66.4 L 790.9,59.4 L 819.2,52.6 L 847.5,45.6 L 875.7,38.7 L 904.0,32.6 L 904.0,240.0 Z" fill="#44403c" fill-opacity="0.12" stroke="none" /><path d="M 56.0,235.1 L 84.3,228.7 L 112.5,222.1 L 140.8,215.3 L 169.1,208.5 L 197.3,201.5 L 225.6,195.2 L 253.9,188.3 L 282.1,181.7 L 310.4,174.7 L 338.7,168.1 L 366.9,161.3 L 395.2,154.4 L 423.5,147.4 L 451.7,141.0 L 480.0,134.1 L 508.3,127.1 L 536.5,120.4 L 564.8,113.6 L 593.1,107.0 L 621.3,100.1 L 649.6,93.3 L 677.9,86.6 L 706.1,79.8 L 734.4,73.0 L 762.7,66.4 L 790.9,59.4 L 819.2,52.6 L 847.5,45.6 L 875.7,38.7 L 904.0,32.6" fill="none" stroke="#44403c" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">0</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">30</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Epoch</text>
+</svg>
+
+    </div>
+    
+    <h2 id="later">Next report</h2>
+    <p>
+      Training can keep going. Ask for another report when you want an update;
+      it will only chart rounds collected since this page.
+    </p>
+
+    <footer>
+      Generated from 309 trainer rounds
+      .
+      Companion to <a href="https://github.com/trackmania-rl/tmrl">tmrl</a>, not a replacement.
+    </footer>
+  </main>
+</body>
+</html>
