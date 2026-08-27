@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TrackMania tmrl results</title>
+  <title>Learning results</title>
   <style>
     :root { --bg:#fafaf9; --ink:#1c1917; --muted:#78716c; --line:#e7e5e4; --accent:#c2410c; --card:#fff; }
     body { margin:0; color:var(--ink); background:var(--bg); font:16px/1.5 Georgia, serif; }
@@ -18,12 +18,12 @@
 </head>
 <body>
   <main>
-    <h1>TrackMania tmrl results</h1>
-    <p class="lead">A LIDAR SAC agent learning TrackMania 2020. Each link is one train.</p>
+    <h1>Learning results</h1>
+    <p class="lead">TrackMania 2020 (LIDAR SAC) and Gymnasium Space Invaders (PPO + CNN). Each link is one train.</p>
     <table>
-      <thead><tr><th>Map</th><th>Run</th><th>Notes</th></tr></thead>
+      <thead><tr><th>Game</th><th>Run</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td>Summer 2026-01</td><td><a href="summer-2026-01/SAC_4_FULL_summer2026_01/">SAC_4_FULL_summer2026_01</a></td><td>Switched to FULL camera</td></tr><tr><td>Summer 2026-01</td><td><a href="summer-2026-01/SAC_4_LIDAR_summer2026_01/">SAC_4_LIDAR_summer2026_01</a></td><td>Learned, then collapsed</td></tr><tr><td>Summer 2026-01</td><td><a href="summer-2026-01/SAC_4_LIDAR_summer2026_01_v2/">SAC_4_LIDAR_summer2026_01_v2</a></td><td>Restart from the peak snapshot</td></tr><tr><td>tmrl-test</td><td><a href="tmrl-test/SAC_4_LIDAR_train/">SAC_4_LIDAR_train</a></td><td>Shakedown overnight</td></tr>
+        <tr><td>Space Invaders</td><td><a href="space-invaders/v1_ppo_invaders/">v1_ppo_invaders</a></td><td>PPO + CNN, live 100M-step train</td></tr><tr><td>Summer 2026-01</td><td><a href="summer-2026-01/SAC_4_FULL_summer2026_01/">SAC_4_FULL_summer2026_01</a></td><td>Switched to FULL camera</td></tr><tr><td>Summer 2026-01</td><td><a href="summer-2026-01/SAC_4_LIDAR_summer2026_01/">SAC_4_LIDAR_summer2026_01</a></td><td>Learned, then collapsed</td></tr><tr><td>Summer 2026-01</td><td><a href="summer-2026-01/SAC_4_LIDAR_summer2026_01_v2/">SAC_4_LIDAR_summer2026_01_v2</a></td><td>Restart from the peak snapshot</td></tr><tr><td>tmrl-test</td><td><a href="tmrl-test/SAC_4_LIDAR_train/">SAC_4_LIDAR_train</a></td><td>Shakedown overnight</td></tr>
       </tbody>
     </table>
   </main>
