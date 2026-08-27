@@ -2,13 +2,13 @@
 
 Notebooks from two experiments: a [LIDAR SAC](https://github.com/trackmania-rl/tmrl) agent on **TrackMania 2020**, and a PPO + Nature CNN agent on **Gymnasium Space Invaders**.
 
-**[Open the reports](https://ehubbard.github.io/trackmania-tmrl-results/)** · TrackMania live numbers on [wandb](https://wandb.ai/models-acme/tmrl)
+**[Open the reports](https://ehubbard.github.io/trackmania-tmrl-results/)** · **[Live stream](https://www.twitch.tv/northeast22)** · TrackMania numbers on [wandb](https://wandb.ai/models-acme/tmrl)
 
 ## Space Invaders
 
 | Game | Run | What happened |
 | --- | --- | --- |
-| Space Invaders | [v1_ppo_invaders](https://ehubbard.github.io/trackmania-tmrl-results/space-invaders/v1_ppo_invaders/) | PPO + CNN on ALE Space Invaders. Snapshot ~1/3 of a 100M-step train. Capture-window peak 2825. Training mean is the eight exploring envs; the window is greedy play. |
+| Space Invaders | [v1_ppo_invaders](https://ehubbard.github.io/trackmania-tmrl-results/space-invaders/v1_ppo_invaders/) | PPO + CNN on ALE Space Invaders. Snapshot ~1/3 of a 100M-step train. Watch live: [twitch.tv/northeast22](https://www.twitch.tv/northeast22). |
 
 On that page: learning loop, training-mean curve vs env steps, last finished window games, entropy, and 2600 scoring. Overlay last-score waits for the on-screen game to end.
 

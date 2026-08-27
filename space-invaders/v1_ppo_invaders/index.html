@@ -49,7 +49,7 @@
     .muted { fill: #78716c; color: #78716c; }
     .tiny { font: 11px ui-sans-serif, system-ui, sans-serif; }
     nav { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
-    nav a { color: var(--muted); margin-right: 14px; }
+    nav a { color: var(--accent); margin-right: 14px; }
     footer { color: var(--muted); font-size: 0.9rem; margin: 48px 0 64px; }
     @media (max-width: 720px) {
       .stats, .loop { grid-template-columns: 1fr 1fr; }
@@ -60,27 +60,29 @@
   <header>
     <nav>
       <a href="../../">All reports</a>
+      <a href="https://www.twitch.tv/northeast22">Live on Twitch</a>
     </nav>
     <h1>Space Invaders · v1_ppo_invaders</h1>
     <p class="lead">
       PPO + Nature CNN on ALE Space Invaders. Eight training games explore;
       one capture window plays the greedy policy. Snapshot at
-      36.18M of 100M env steps (36% of the budget).
-      RTX 4080 Super. Generated 2026-08-27 11:49 UTC.
+      38.45M of 100M env steps (38% of the budget).
+      RTX 4080 Super. Generated 2026-08-27 12:13 UTC.
+      Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.
     </p>
   </header>
   <main>
     <div class="stats">
-      <div class="stat"><b>36.18M</b><span>Env steps / 100M</span></div>
-      <div class="stat"><b>1706</b><span>Train mean (latest bucket)</span></div>
-      <div class="stat"><b>1711</b><span>Window recent avg</span></div>
+      <div class="stat"><b>38.45M</b><span>Env steps / 100M</span></div>
+      <div class="stat"><b>1947</b><span>Train mean (latest bucket)</span></div>
+      <div class="stat"><b>1736</b><span>Window recent avg</span></div>
       <div class="stat"><b>2825</b><span>Window peak</span></div>
     </div>
     <div class="stats">
-      <div class="stat"><b>1680</b><span>Last finished window game</span></div>
-      <div class="stat"><b>0.74</b><span>Policy entropy</span></div>
-      <div class="stat"><b>1053</b><span>Steps / sec</span></div>
-      <div class="stat"><b>35330</b><span>PPO update</span></div>
+      <div class="stat"><b>1575</b><span>Last finished window game</span></div>
+      <div class="stat"><b>0.89</b><span>Policy entropy</span></div>
+      <div class="stat"><b>1081</b><span>Steps / sec</span></div>
+      <div class="stat"><b>37550</b><span>PPO update</span></div>
     </div>
 
     <div class="callout">
@@ -110,7 +112,7 @@
     <p class="caption">
       Mean return of finished training games. One point per ~400 PPO updates
       (~0.4M env steps). Dashed line is the overlay human reference (~1600),
-      not a hard cap. Source: episodes.jsonl (33,303 games).
+      not a hard cap. Source: episodes.jsonl (34,596 games).
     </p>
     <div class="chart">
 <svg viewBox="0 0 920 280" role="img" aria-label="Mean score versus Env steps (millions)">
@@ -133,23 +135,23 @@
         <tr><td>10 – 20M</td><td>800 → 1,020</td><td>Clears more invaders per life</td></tr>
         <tr><td>~20M</td><td>dip to ~740</td><td>Not monotonic — a slump, then recovery</td></tr>
         <tr><td>21 – 27M</td><td>1,000 → 1,270</td><td>Second climb</td></tr>
-        <tr><td>27M – now</td><td>1,270 → 1,706</td><td>Training mean near / past the human line; window often higher</td></tr>
+        <tr><td>27M – now</td><td>1,270 → 1,947</td><td>Training mean near / past the human line; window often higher</td></tr>
       </tbody>
     </table>
 
     <h2>Capture window — last 20 finished games</h2>
     <p class="caption">
       Greedy policy on the ALE window. Updates only when a game ends.
-      Last 1680, recent avg 1711, peak 2825.
+      Last 1575, recent avg 1736, peak 2825.
       Source: watch.json.
     </p>
     <div class="chart">
 <svg viewBox="0 0 920 280" role="img" aria-label="Score versus Finished capture-window games (last 20)">
   <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Score</text>
-  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0.0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">1503.9</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">3007.8</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0.0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">1458.0</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">2916.0</text>
   
-  <path d="M 56.0,240.0 L 56.0,60.5 L 100.6,119.7 L 145.3,32.6 L 189.9,73.2 L 234.5,39.7 L 279.2,77.6 L 323.8,148.4 L 368.4,161.8 L 413.1,64.2 L 457.7,119.0 L 502.3,106.3 L 546.9,148.0 L 591.6,41.2 L 636.2,80.6 L 680.8,78.0 L 725.5,150.3 L 770.1,148.4 L 814.7,105.2 L 859.4,152.9 L 904.0,114.9 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" />
-  <path d="M 56.0,60.5 L 100.6,119.7 L 145.3,32.6 L 189.9,73.2 L 234.5,39.7 L 279.2,77.6 L 323.8,148.4 L 368.4,161.8 L 413.1,64.2 L 457.7,119.0 L 502.3,106.3 L 546.9,148.0 L 591.6,41.2 L 636.2,80.6 L 680.8,78.0 L 725.5,150.3 L 770.1,148.4 L 814.7,105.2 L 859.4,152.9 L 904.0,114.9" fill="none" stroke="#c2410c" stroke-width="2" />
+  <path d="M 56.0,240.0 L 56.0,34.9 L 100.6,75.6 L 145.3,72.9 L 189.9,147.4 L 234.5,145.5 L 279.2,101.0 L 323.8,150.1 L 368.4,110.9 L 413.1,35.3 L 457.7,74.5 L 502.3,193.5 L 546.9,97.1 L 591.6,167.0 L 636.2,57.2 L 680.8,63.7 L 725.5,32.6 L 770.1,69.1 L 814.7,145.5 L 859.4,122.1 L 904.0,119.0 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" />
+  <path d="M 56.0,34.9 L 100.6,75.6 L 145.3,72.9 L 189.9,147.4 L 234.5,145.5 L 279.2,101.0 L 323.8,150.1 L 368.4,110.9 L 413.1,35.3 L 457.7,74.5 L 502.3,193.5 L 546.9,97.1 L 591.6,167.0 L 636.2,57.2 L 680.8,63.7 L 725.5,32.6 L 770.1,69.1 L 814.7,145.5 L 859.4,122.1 L 904.0,119.0" fill="none" stroke="#c2410c" stroke-width="2" />
   <text x="56.0" y="268" text-anchor="middle" class="muted tiny">1.0</text><text x="480.0" y="268" text-anchor="middle" class="muted tiny">10.5</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">20.0</text>
   <text x="460" y="278" text-anchor="middle" class="muted tiny">Finished capture-window games (last 20)</text>
 </svg>
@@ -160,7 +162,7 @@
     <div class="chart">
 <svg viewBox="0 0 920 240" role="img" aria-label="Games">
   <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 120)">Games</text>
-  <line x1="56" x2="904" y1="192" y2="192" stroke="#e7e5e4" /><rect x="56.0" y="186.7" width="131.3" height="5.3" fill="#c2410c" /><text x="121.7" y="180.7" text-anchor="middle" class="tiny">1</text><text x="121.7" y="226" text-anchor="middle" class="muted tiny"><500</text><rect x="199.3" y="155.1" width="131.3" height="36.9" fill="#c2410c" /><text x="265.0" y="149.1" text-anchor="middle" class="tiny">7</text><text x="265.0" y="226" text-anchor="middle" class="muted tiny">500–999</text><rect x="342.7" y="39.0" width="131.3" height="153.0" fill="#c2410c" /><text x="408.3" y="33.0" text-anchor="middle" class="tiny">29</text><text x="408.3" y="226" text-anchor="middle" class="muted tiny">1000–1499</text><rect x="486.0" y="91.7" width="131.3" height="100.3" fill="#c2410c" /><text x="551.7" y="85.7" text-anchor="middle" class="tiny">19</text><text x="551.7" y="226" text-anchor="middle" class="muted tiny">1500–1999</text><rect x="629.3" y="91.7" width="131.3" height="100.3" fill="#c2410c" /><text x="695.0" y="85.7" text-anchor="middle" class="tiny">19</text><text x="695.0" y="226" text-anchor="middle" class="muted tiny">2000–2499</text><rect x="772.7" y="165.6" width="131.3" height="26.4" fill="#c2410c" /><text x="838.3" y="159.6" text-anchor="middle" class="tiny">5</text><text x="838.3" y="226" text-anchor="middle" class="muted tiny">2500+</text>
+  <line x1="56" x2="904" y1="192" y2="192" stroke="#e7e5e4" /><rect x="56.0" y="192.0" width="131.3" height="0.0" fill="#c2410c" /><text x="121.7" y="186.0" text-anchor="middle" class="tiny">0</text><text x="121.7" y="226" text-anchor="middle" class="muted tiny"><500</text><rect x="199.3" y="138.8" width="131.3" height="53.2" fill="#c2410c" /><text x="265.0" y="132.8" text-anchor="middle" class="tiny">8</text><text x="265.0" y="226" text-anchor="middle" class="muted tiny">500–999</text><rect x="342.7" y="39.0" width="131.3" height="153.0" fill="#c2410c" /><text x="408.3" y="33.0" text-anchor="middle" class="tiny">23</text><text x="408.3" y="226" text-anchor="middle" class="muted tiny">1000–1499</text><rect x="486.0" y="58.9" width="131.3" height="133.1" fill="#c2410c" /><text x="551.7" y="52.9" text-anchor="middle" class="tiny">20</text><text x="551.7" y="226" text-anchor="middle" class="muted tiny">1500–1999</text><rect x="629.3" y="45.6" width="131.3" height="146.4" fill="#c2410c" /><text x="695.0" y="39.6" text-anchor="middle" class="tiny">22</text><text x="695.0" y="226" text-anchor="middle" class="muted tiny">2000–2499</text><rect x="772.7" y="145.4" width="131.3" height="46.6" fill="#c2410c" /><text x="838.3" y="139.4" text-anchor="middle" class="tiny">7</text><text x="838.3" y="226" text-anchor="middle" class="muted tiny">2500+</text>
   <text x="460" y="238" text-anchor="middle" class="muted tiny">Score band</text>
 </svg>
 </div>
@@ -169,7 +171,7 @@
     <p>
       Uniform random over 6 actions sits near 1.79 nats. Falling toward ~0.7
       means favorite moves (usually move + fire) without freezing into one
-      script. Clipfrac on this snapshot: 0.192.
+      script. Clipfrac on this snapshot: 0.272.
     </p>
     <p class="caption">Policy entropy after PPO updates. Source: train.csv. Units: nats.</p>
     <div class="chart">
@@ -177,9 +179,9 @@
   <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Entropy (nats)</text>
   <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0.5</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">1.2</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">1.9</text>
   
-  <path d="M 56.0,240.0 L 56.0,38.6 L 83.4,127.5 L 110.8,160.0 L 138.1,166.1 L 165.3,185.5 L 192.7,187.6 L 220.0,193.4 L 246.9,176.6 L 274.3,180.7 L 301.7,151.3 L 329.1,166.7 L 356.4,191.1 L 383.8,189.9 L 411.2,188.6 L 438.6,206.9 L 466.0,203.7 L 493.3,189.6 L 520.7,178.6 L 548.1,195.8 L 575.5,189.6 L 602.8,179.9 L 630.2,184.9 L 657.6,203.8 L 685.0,202.2 L 712.4,191.7 L 739.7,225.1 L 767.1,197.5 L 794.5,231.0 L 821.9,213.7 L 849.2,189.2 L 876.6,213.3 L 904.0,194.7 L 904.0,240.0 Z" fill="#1d4ed8" fill-opacity="0.12" stroke="none" />
-  <path d="M 56.0,38.6 L 83.4,127.5 L 110.8,160.0 L 138.1,166.1 L 165.3,185.5 L 192.7,187.6 L 220.0,193.4 L 246.9,176.6 L 274.3,180.7 L 301.7,151.3 L 329.1,166.7 L 356.4,191.1 L 383.8,189.9 L 411.2,188.6 L 438.6,206.9 L 466.0,203.7 L 493.3,189.6 L 520.7,178.6 L 548.1,195.8 L 575.5,189.6 L 602.8,179.9 L 630.2,184.9 L 657.6,203.8 L 685.0,202.2 L 712.4,191.7 L 739.7,225.1 L 767.1,197.5 L 794.5,231.0 L 821.9,213.7 L 849.2,189.2 L 876.6,213.3 L 904.0,194.7" fill="none" stroke="#1d4ed8" stroke-width="2" />
-  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">0.0</text><text x="480.0" y="268" text-anchor="middle" class="muted tiny">18.1</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">36.2</text>
+  <path d="M 56.0,240.0 L 56.0,38.7 L 83.4,142.2 L 110.8,150.0 L 138.1,189.7 L 165.3,169.5 L 192.7,159.1 L 220.0,191.9 L 247.0,198.8 L 274.3,193.0 L 301.7,184.5 L 329.1,172.8 L 356.5,170.5 L 383.8,165.6 L 411.2,165.5 L 438.6,175.3 L 466.0,199.9 L 493.3,188.3 L 520.7,196.6 L 548.1,202.7 L 575.5,203.4 L 602.9,187.9 L 630.2,200.8 L 657.6,207.1 L 685.0,203.6 L 712.4,195.7 L 739.7,210.5 L 767.1,222.7 L 794.5,209.0 L 821.9,204.0 L 849.2,211.4 L 876.6,230.8 L 904.0,228.1 L 904.0,240.0 Z" fill="#1d4ed8" fill-opacity="0.12" stroke="none" />
+  <path d="M 56.0,38.7 L 83.4,142.2 L 110.8,150.0 L 138.1,189.7 L 165.3,169.5 L 192.7,159.1 L 220.0,191.9 L 247.0,198.8 L 274.3,193.0 L 301.7,184.5 L 329.1,172.8 L 356.5,170.5 L 383.8,165.6 L 411.2,165.5 L 438.6,175.3 L 466.0,199.9 L 493.3,188.3 L 520.7,196.6 L 548.1,202.7 L 575.5,203.4 L 602.9,187.9 L 630.2,200.8 L 657.6,207.1 L 685.0,203.6 L 712.4,195.7 L 739.7,210.5 L 767.1,222.7 L 794.5,209.0 L 821.9,204.0 L 849.2,211.4 L 876.6,230.8 L 904.0,228.1" fill="none" stroke="#1d4ed8" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">0.0</text><text x="480.0" y="268" text-anchor="middle" class="muted tiny">19.2</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">38.4</text>
   <text x="460" y="278" text-anchor="middle" class="muted tiny">Env steps (millions)</text>
 </svg>
 </div>
@@ -222,7 +224,9 @@
   <footer>
     <main>
       HTML only — no checkpoints or episode logs. Companion to the TrackMania
-      notebooks on this site. Local overlays: http://127.0.0.1:8765/hud
+      notebooks on this site. Live stream:
+      <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.
+      Local overlays: http://127.0.0.1:8765/hud
     </main>
   </footer>
 </body>
