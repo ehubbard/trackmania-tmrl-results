@@ -64,28 +64,57 @@
       <a href="https://www.twitch.tv/northeast22">Live on Twitch</a>
     </nav>
     <h1>Space Invaders · v1_ppo_invaders</h1>
-    <p class="lead">Training finished. PPO + Nature CNN on ALE Space Invaders. Eight training games explored; one capture window played the greedy policy. <strong>100.00M environment steps</strong> on an RTX 4080 Super. Generated 2026-08-27 23:01 UTC. Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.</p>
+    <p class="lead">Training finished. PPO + Nature CNN on ALE Space Invaders. Eight training games explored; one capture window played the greedy policy. <strong>100.00M environment steps</strong> on an RTX 4080 Super. Frozen play of those weights, same credit through landings: <strong>5075</strong>. Generated 2026-08-28 11:45 UTC. Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.</p>
   </header>
   <main>
     <div class="stats">
       <div class="stat"><b>100.00M</b><span>Env steps / 100M</span></div>
       <div class="stat"><b>2697</b><span>Train mean (latest bucket)</span></div>
-      <div class="stat"><b>2568</b><span>Window recent avg</span></div>
-      <div class="stat"><b>3615</b><span>Window peak</span></div>
+      <div class="stat"><b>2882</b><span>Window recent avg</span></div>
+      <div class="stat"><b>3790</b><span>Window peak (training)</span></div>
     </div>
     <div class="stats">
-      <div class="stat"><b>1840</b><span>Last finished window game</span></div>
+      <div class="stat"><b>2990</b><span>Last window game</span></div>
+      <div class="stat"><b>5075</b><span>Frozen play (same credit)</span></div>
       <div class="stat"><b>0.62</b><span>Policy entropy</span></div>
-      <div class="stat"><b>1594</b><span>Steps / sec</span></div>
       <div class="stat"><b>97655</b><span>PPO update</span></div>
     </div>
 
     <div class="callout">
-      <strong>Two scores.</strong> The window number is one finished capture-window
-      game (greedy, raw ALE points). The training curve is the mean of eight
-      exploring games the learner updates on. The CNN never sees the point value —
-      it sees +1 / 0 / −1 per frame.
+      <strong>Two scores during the train.</strong> The window number is one
+      finished capture-window game (greedy, raw ALE points). The training curve
+      is the mean of eight exploring games the learner updates on. The CNN never
+      sees the point value — it sees +1 / 0 / −1 per frame.
     </div>
+
+    
+    <h2>After 100 million steps</h2>
+    <p>
+      The run hit the budget and stopped. Weights are frozen. On stream the
+      same network plays a full credit: no random no-ops, no sticky buttons,
+      always the greedy action. Space Invaders itself does not roll dice, so
+      every credit is the same game — <strong>5075</strong> on the
+      2600 scoreboard. Earlier credits printed 4675 until scoreboard RAM was kept across landings; after that it was 5075 every loop.
+    </p>
+    <p>
+      That number is not a fair rematch with the training mean. Training used
+      sticky actions and ended a game when ALE said game over (including the
+      rack reaching Earth). Frozen play keeps the same credit when ships remain
+      after a landing, so the cannon gets extra waves the learner never practiced
+      as one long episode.
+    </p>
+    <table>
+      <thead><tr><th>What</th><th>Score</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Human (overlay reference)</td><td>~1600</td><td>Mnih et al. 2015 DQN paper, not this streamer</td></tr>
+        <tr><td>Train mean (end)</td><td>2697</td><td>Latest ~0.4M-step bucket of exploring games</td></tr>
+        <tr><td>Best training episode</td><td>4965</td><td>One lucky / long exploring game in the log</td></tr>
+        <tr><td>Capture window peak</td><td>3790</td><td>Greedy window while weights were still updating</td></tr>
+        <tr><td>Frozen play</td><td>5075</td><td>Same weights, full credit, landings continued</td></tr>
+      </tbody>
+    </table>
+    <p class="caption">Window peak from watch_episodes.jsonl (games under 3200 steps). Frozen play is the longer credits after training stopped.</p>
+
 
     <h2>The loop</h2>
     <p>
@@ -131,24 +160,24 @@
         <tr><td>10 – 20M</td><td>801 → 738</td><td>Clears more invaders per life</td></tr>
         <tr><td>~20M</td><td>738</td><td>Not monotonic — slumps happen, then recovery</td></tr>
         <tr><td>21 – 30M</td><td>887 → 1,454</td><td>Second climb</td></tr>
-        <tr><td>30M – 100M</td><td>1,454 → 2,697</td><td>Training mean near / past the human line; window often higher</td></tr>
+        <tr><td>30M – 100M</td><td>1,454 → 2,697</td><td>Settled above the human line; window games often higher still</td></tr>
 
       </tbody>
     </table>
 
     <h2>Capture window — last 20 finished games</h2>
     <p class="caption">
-      Greedy policy on the ALE window. Updates only when a game ends.
-      Last 1840, recent avg 2568, peak 3615.
-      Source: watch.json.
+      Greedy policy on the ALE window <em>during training</em> (not the frozen
+      play loop). Last 2990, recent avg 2882, peak 3790.
+      Source: watch_episodes.jsonl.
     </p>
     <div class="chart">
 <svg viewBox="0 0 920 280" role="img" aria-label="Score versus Finished capture-window games (last 20)">
   <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Score</text>
-  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0.0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">1914.3</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">3828.6</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0.0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">1833.3</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">3666.6</text>
   
-  <path d="M 56.0,240.0 L 56.0,97.8 L 100.6,96.4 L 145.3,69.2 L 189.9,75.3 L 234.5,68.9 L 279.2,65.4 L 323.8,86.1 L 368.4,66.8 L 413.1,66.5 L 457.7,76.5 L 502.3,32.6 L 546.9,82.3 L 591.6,122.7 L 636.2,85.2 L 680.8,75.3 L 725.5,41.4 L 770.1,112.7 L 814.7,135.9 L 859.4,77.1 L 904.0,132.3 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" />
-  <path d="M 56.0,97.8 L 100.6,96.4 L 145.3,69.2 L 189.9,75.3 L 234.5,68.9 L 279.2,65.4 L 323.8,86.1 L 368.4,66.8 L 413.1,66.5 L 457.7,76.5 L 502.3,32.6 L 546.9,82.3 L 591.6,122.7 L 636.2,85.2 L 680.8,75.3 L 725.5,41.4 L 770.1,112.7 L 814.7,135.9 L 859.4,77.1 L 904.0,132.3" fill="none" stroke="#c2410c" stroke-width="2" />
+  <path d="M 56.0,240.0 L 56.0,68.0 L 100.6,32.6 L 145.3,107.1 L 189.9,131.3 L 234.5,69.9 L 279.2,127.6 L 323.8,181.0 L 368.4,69.6 L 413.1,69.6 L 457.7,57.3 L 502.3,73.5 L 546.9,69.6 L 591.6,43.9 L 636.2,69.6 L 680.8,71.4 L 725.5,69.6 L 770.1,69.6 L 814.7,57.3 L 859.4,57.3 L 904.0,57.3 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" />
+  <path d="M 56.0,68.0 L 100.6,32.6 L 145.3,107.1 L 189.9,131.3 L 234.5,69.9 L 279.2,127.6 L 323.8,181.0 L 368.4,69.6 L 413.1,69.6 L 457.7,57.3 L 502.3,73.5 L 546.9,69.6 L 591.6,43.9 L 636.2,69.6 L 680.8,71.4 L 725.5,69.6 L 770.1,69.6 L 814.7,57.3 L 859.4,57.3 L 904.0,57.3" fill="none" stroke="#c2410c" stroke-width="2" />
   <text x="56.0" y="268" text-anchor="middle" class="muted tiny">1.0</text><text x="480.0" y="268" text-anchor="middle" class="muted tiny">10.5</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">20.0</text>
   <text x="460" y="278" text-anchor="middle" class="muted tiny">Finished capture-window games (last 20)</text>
 </svg>
@@ -159,7 +188,7 @@
     <div class="chart">
 <svg viewBox="0 0 920 240" role="img" aria-label="Games">
   <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 120)">Games</text>
-  <line x1="56" x2="904" y1="192" y2="192" stroke="#e7e5e4" /><rect x="56.0" y="192.0" width="131.3" height="0.0" fill="#c2410c" /><text x="121.7" y="186.0" text-anchor="middle" class="tiny">0</text><text x="121.7" y="226" text-anchor="middle" class="muted tiny"><500</text><rect x="199.3" y="186.8" width="131.3" height="5.2" fill="#c2410c" /><text x="265.0" y="180.8" text-anchor="middle" class="tiny">2</text><text x="265.0" y="226" text-anchor="middle" class="muted tiny">500–999</text><rect x="342.7" y="186.8" width="131.3" height="5.2" fill="#c2410c" /><text x="408.3" y="180.8" text-anchor="middle" class="tiny">2</text><text x="408.3" y="226" text-anchor="middle" class="muted tiny">1000–1499</text><rect x="486.0" y="171.2" width="131.3" height="20.8" fill="#c2410c" /><text x="551.7" y="165.2" text-anchor="middle" class="tiny">8</text><text x="551.7" y="226" text-anchor="middle" class="muted tiny">1500–1999</text><rect x="629.3" y="168.7" width="131.3" height="23.3" fill="#c2410c" /><text x="695.0" y="162.7" text-anchor="middle" class="tiny">9</text><text x="695.0" y="226" text-anchor="middle" class="muted tiny">2000–2499</text><rect x="772.7" y="39.0" width="131.3" height="153.0" fill="#c2410c" /><text x="838.3" y="33.0" text-anchor="middle" class="tiny">59</text><text x="838.3" y="226" text-anchor="middle" class="muted tiny">2500+</text>
+  <line x1="56" x2="904" y1="192" y2="192" stroke="#e7e5e4" /><rect x="56.0" y="192.0" width="131.3" height="0.0" fill="#c2410c" /><text x="121.7" y="186.0" text-anchor="middle" class="tiny">0</text><text x="121.7" y="226" text-anchor="middle" class="muted tiny"><500</text><rect x="199.3" y="186.9" width="131.3" height="5.1" fill="#c2410c" /><text x="265.0" y="180.9" text-anchor="middle" class="tiny">2</text><text x="265.0" y="226" text-anchor="middle" class="muted tiny">500–999</text><rect x="342.7" y="186.9" width="131.3" height="5.1" fill="#c2410c" /><text x="408.3" y="180.9" text-anchor="middle" class="tiny">2</text><text x="408.3" y="226" text-anchor="middle" class="muted tiny">1000–1499</text><rect x="486.0" y="171.6" width="131.3" height="20.4" fill="#c2410c" /><text x="551.7" y="165.6" text-anchor="middle" class="tiny">8</text><text x="551.7" y="226" text-anchor="middle" class="muted tiny">1500–1999</text><rect x="629.3" y="171.6" width="131.3" height="20.4" fill="#c2410c" /><text x="695.0" y="165.6" text-anchor="middle" class="tiny">8</text><text x="695.0" y="226" text-anchor="middle" class="muted tiny">2000–2499</text><rect x="772.7" y="39.0" width="131.3" height="153.0" fill="#c2410c" /><text x="838.3" y="33.0" text-anchor="middle" class="tiny">60</text><text x="838.3" y="226" text-anchor="middle" class="muted tiny">2500+</text>
   <text x="460" y="238" text-anchor="middle" class="muted tiny">Score band</text>
 </svg>
 </div>
