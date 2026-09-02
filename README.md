@@ -1,8 +1,16 @@
 # Learning results
 
-Notebooks from two experiments: a [LIDAR SAC](https://github.com/trackmania-rl/tmrl) agent on **TrackMania 2020**, and a PPO + Nature CNN agent on **Gymnasium Space Invaders**.
+Notebooks from three experiments: a [LIDAR SAC](https://github.com/trackmania-rl/tmrl) agent on **TrackMania 2020**, a PPO + Nature CNN agent on **Gymnasium Space Invaders**, and a PPO + Nature CNN agent on **NES Super Mario Bros**.
 
 **[Open the reports](https://ehubbard.github.io/trackmania-tmrl-results/)** · **[Live stream](https://www.twitch.tv/northeast22)** · TrackMania numbers on [wandb](https://wandb.ai/models-acme/tmrl)
+
+## Super Mario Bros
+
+| Game | Run | What happened |
+| --- | --- | --- |
+| Super Mario Bros | [v3_ppo_mario_full_fresh](https://ehubbard.github.io/trackmania-tmrl-results/mario/v3_ppo_mario_full_fresh/) | First 100 million PPO steps on the full NES cart. World 1 cleared in order; World 2 open. Explainer: [How the AI learns](https://ehubbard.github.io/trackmania-tmrl-results/mario/). |
+
+On that page: greedy vs the 16 learners, why train return is not skill, the 1-3 pit farm, sequential cart %, and the usual questions (why the video is fast, why it looks like it forgot).
 
 ## Space Invaders
 

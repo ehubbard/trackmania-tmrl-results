@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teaching an AI Super Mario Bros</title>
+  <style>
+    :root {
+      --bg: #fafaf9; --ink: #1c1917; --muted: #78716c; --line: #e7e5e4;
+      --accent: #c2410c; --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--ink); background: var(--bg);
+      font: 16px/1.55 "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    }
+    header, main, footer { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    header { padding-top: 48px; padding-bottom: 8px; }
+    h1 { font-size: 2.15rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 10px; }
+    h2 { font-size: 1.3rem; margin: 44px 0 12px; }
+    h3 { font-size: 1.05rem; margin: 28px 0 8px; }
+    p.lead { color: var(--muted); margin: 0 0 20px; font-size: 1.08rem; }
+    nav { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.85rem; margin-bottom: 16px; }
+    nav a { color: var(--accent); margin-right: 14px; }
+    a { color: var(--accent); }
+    .callout {
+      border-left: 3px solid var(--accent); background: #fff7ed;
+      padding: 14px 18px; margin: 16px 0 28px;
+    }
+    .loop {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+      margin: 16px 0 8px; font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .loop div {
+      background: var(--card); border: 1px solid var(--line); padding: 14px 10px; text-align: center;
+    }
+    .loop strong { display: block; font-size: 0.95rem; }
+    .loop span { color: var(--muted); font-size: 0.78rem; }
+    .hood { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0 28px; }
+    .hood div { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; }
+    .hood h3 { margin: 0 0 6px; }
+    .steps { counter-reset: step; list-style: none; padding: 0; margin: 12px 0 28px; }
+    .steps li {
+      counter-increment: step; background: var(--card); border: 1px solid var(--line);
+      padding: 14px 16px 14px 56px; margin: 0 0 8px; position: relative;
+    }
+    .steps li::before {
+      content: counter(step); position: absolute; left: 16px; top: 14px;
+      font: 600 0.95rem ui-sans-serif, system-ui, sans-serif; color: var(--accent);
+    }
+    table { width: 100%; border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.95rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 500; }
+    .caption { color: var(--muted); font-size: 0.85rem; margin: 8px 0 28px; }
+    .chart {
+      background: var(--card); border: 1px solid var(--line);
+      padding: 16px 12px 8px; margin: 8px 0 8px;
+    }
+    svg { width: 100%; height: auto; display: block; }
+    .tiny { font: 11px ui-sans-serif, system-ui, sans-serif; fill: #78716c; }
+    .muted { fill: #78716c; color: #78716c; }
+    footer { color: var(--muted); font-size: 0.9rem; margin: 48px 0 64px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 28px; }
+    .stat { background: var(--card); border: 1px solid var(--line); padding: 14px 16px; }
+    .stat b { display: block; font-size: 1.45rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .stat span { color: var(--muted); font-size: 0.82rem; font-family: ui-sans-serif, system-ui, sans-serif; }
+    details {
+      background: var(--card); border: 1px solid var(--line); padding: 12px 16px; margin: 0 0 8px;
+    }
+    details summary { cursor: pointer; font-weight: 600; font-family: ui-sans-serif, system-ui, sans-serif; }
+    details p { margin: 10px 0 0; }
+    @media (max-width: 720px) {
+      .loop, .hood, .stats { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../">All reports</a>
+      <a href="v3_ppo_mario_full_fresh/">Run notebook</a>
+      <a href="https://www.twitch.tv/northeast22">Twitch</a>
+    </nav>
+    <h1>Teaching an AI Super Mario Bros</h1>
+    <p class="lead">
+      A neural net learned the NES cart from pixels and a homemade score —
+      not from a walkthrough. After <strong>100 million</strong> environment
+      steps it has beaten World 1 in order and opened World 2. This page is
+      the wrap-up of that first budget.
+    </p>
+  </header>
+  <main>
+    <div class="callout">
+      <strong>If you only read one paragraph.</strong>
+      Sixteen Marios train at once by gambling. The window you watch on stream
+      is the same network played <em>greedy</em> — always the single most
+      likely button combo, never a dice roll. That is why the TV can look
+      stuck on 1-1 while the learner has already reached 2-1. The number that
+      looks like a score (train return) also lied for a long time: it was
+      high when Mario farmed a suicide pit, and it dropped when he actually
+      learned to jump. Campaign progress is sequential stages, not that
+      number.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>100M</b><span>Env steps (first budget)</span></div>
+      <div class="stat"><b>2-1</b><span>Sequential farthest</span></div>
+      <div class="stat"><b>4 / 32</b><span>Stages flagged in order</span></div>
+      <div class="stat"><b>13%</b><span>Cart pixels (length-weighted)</span></div>
+    </div>
+    <p>
+      Train return at the cap: <strong>305</strong> (v3 scale, already
+      ÷10). Charts, the pit-farm story, and the FAQ:
+      <a href="v3_ppo_mario_full_fresh/">run notebook</a>.
+      Generated 2026-09-02 01:30 UTC.
+    </p>
+    <p class="caption">PPO train return versus env steps (millions). The spike is a death farm, not genius. The cliff is leaving it.</p>
+    <div class="chart">
+<svg viewBox="0 0 920 280" role="img" aria-label="Train return (v3 /10) versus Env steps (millions)">
+  <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Train return (v3 /10)</text>
+  <line x1="56" x2="904" y1="240.0" y2="240.0" stroke="#e7e5e4" /><text x="48" y="244.0" text-anchor="end" class="muted tiny">0.0</text><line x1="56" x2="904" y1="128.0" y2="128.0" stroke="#e7e5e4" /><text x="48" y="132.0" text-anchor="end" class="muted tiny">687.1</text><line x1="56" x2="904" y1="16.0" y2="16.0" stroke="#e7e5e4" /><text x="48" y="20.0" text-anchor="end" class="muted tiny">1374.1</text>
+  <line x1="56" x2="904" y1="117.7" y2="117.7" stroke="#78716c" stroke-dasharray="4 4" /><text x="900" y="111.7" text-anchor="end" class="muted tiny">pit-farm plateau</text>
+  <path d="M 56.0,240.0 L 56.0,237.7 L 74.0,223.2 L 91.9,219.3 L 109.9,219.3 L 127.8,213.9 L 145.8,211.5 L 163.7,209.1 L 181.7,210.6 L 201.0,209.4 L 221.8,213.1 L 239.8,203.0 L 257.7,201.7 L 275.7,201.7 L 293.6,202.7 L 311.6,208.9 L 329.5,238.1 L 347.5,210.3 L 365.4,210.8 L 383.4,205.6 L 401.3,207.8 L 419.3,207.3 L 437.2,207.6 L 455.2,206.2 L 473.1,119.9 L 491.1,143.3 L 509.0,112.0 L 527.0,92.6 L 544.9,130.3 L 562.9,95.8 L 580.9,108.5 L 598.8,106.2 L 616.8,125.1 L 634.7,78.6 L 652.7,95.2 L 670.6,105.5 L 688.6,117.5 L 706.5,32.6 L 724.5,85.1 L 742.4,205.4 L 760.4,202.2 L 778.3,195.9 L 796.3,191.9 L 814.2,193.3 L 832.2,192.7 L 850.1,191.8 L 868.1,186.2 L 886.0,187.6 L 904.0,187.6 L 904.0,240.0 Z" fill="#c2410c" fill-opacity="0.12" stroke="none" />
+  <path d="M 56.0,237.7 L 74.0,223.2 L 91.9,219.3 L 109.9,219.3 L 127.8,213.9 L 145.8,211.5 L 163.7,209.1 L 181.7,210.6 L 201.0,209.4 L 221.8,213.1 L 239.8,203.0 L 257.7,201.7 L 275.7,201.7 L 293.6,202.7 L 311.6,208.9 L 329.5,238.1 L 347.5,210.3 L 365.4,210.8 L 383.4,205.6 L 401.3,207.8 L 419.3,207.3 L 437.2,207.6 L 455.2,206.2 L 473.1,119.9 L 491.1,143.3 L 509.0,112.0 L 527.0,92.6 L 544.9,130.3 L 562.9,95.8 L 580.9,108.5 L 598.8,106.2 L 616.8,125.1 L 634.7,78.6 L 652.7,95.2 L 670.6,105.5 L 688.6,117.5 L 706.5,32.6 L 724.5,85.1 L 742.4,205.4 L 760.4,202.2 L 778.3,195.9 L 796.3,191.9 L 814.2,193.3 L 832.2,192.7 L 850.1,191.8 L 868.1,186.2 L 886.0,187.6 L 904.0,187.6" fill="none" stroke="#c2410c" stroke-width="2" />
+  <text x="56.0" y="268" text-anchor="middle" class="muted tiny">0</text><text x="480.0" y="268" text-anchor="middle" class="muted tiny">49</text><text x="904.0" y="268" text-anchor="middle" class="muted tiny">99</text>
+  <text x="460" y="278" text-anchor="middle" class="muted tiny">Env steps (millions)</text>
+</svg>
+</div>
+
+    <h2>The loop</h2>
+    <p>
+      Every moment is the same four beats. Repeat that a hundred million times
+      and the weights become a player. Nobody wrote “jump the first 1-3 pit.”
+    </p>
+    <div class="loop">
+      <div><strong>See</strong><span>4 gray 84×84 frames</span></div>
+      <div><strong>Choose</strong><span>12 button combos</span></div>
+      <div><strong>Play</strong><span>NES Super Mario Bros</span></div>
+      <div><strong>Score</strong><span>new x, flags, taxes</span></div>
+      <div><strong>PPO</strong><span>nudge the net</span></div>
+    </div>
+    <p class="caption">After PPO writes new weights, the next frames are seen by a slightly different player.</p>
+
+    <h2>What it actually sees and does</h2>
+    <div class="hood">
+      <div>
+        <h3>Eyes</h3>
+        <p>
+          Not “there is a pit at x=670.” The emulator feeds the raw NES
+          picture. We shrink it to 84×84 grayscale and stack four frames so
+          motion exists. Frame skip 4 hides a lot of velocity, so we also
+          paint how fast Mario is moving as the top row of that tiny image.
+          Same tensor shape; the checkpoint still loads.
+        </p>
+      </div>
+      <div>
+        <h3>Hands</h3>
+        <p>
+          Twelve discrete actions (COMPLEX): idle, run, jump, and the usual
+          NES diagonals. We did not switch to a simpler stick. That would
+          have been a new network and a new train.
+        </p>
+      </div>
+      <div>
+        <h3>Score signal</h3>
+        <p>
+          Mostly: new horizontal progress on the current stage, plus a sticky
+          bonus when a flag is first grabbed. A pile of anti-farm rules stop
+          him getting paid for walking into a pit, sitting until TIME 000, or
+          taking the 1-2 warp to World 3 and calling it done.
+        </p>
+      </div>
+      <div>
+        <h3>Brain</h3>
+        <p>
+          A Nature CNN: three small convolution layers, a 512-unit layer, then
+          a policy head (12 buttons) and a critic head. Same family as the
+          Space Invaders notebook on this site. PPO, not Q-learning.
+        </p>
+      </div>
+    </div>
+
+    <h2>Greedy vs the sixteen learners</h2>
+    <p>
+      The network outputs twelve probabilities. <strong>Greedy</strong> means
+      take the largest one, every time — no dice. That is the NES window on
+      stream. The sixteen trainers <strong>sample</strong> from the same list,
+      so they still try the slightly-less-likely jump. PPO needs that noise.
+      Watch also reloads the latest checkpoint between lives; it is current,
+      not frozen. Frozen play (load once, never reload) is a different mode
+      and cannot share the GPU with training.
+    </p>
+
+    <h2>The plot of the first 100 million</h2>
+    <ol class="steps">
+      <li>
+        <strong>Walk right.</strong>
+        1-1 and 1-2 come for free enough. The 1-2 pipe to World 3 looks like
+        a miracle on a bad overlay. It is a cheat. Sequential cart ignores it.
+      </li>
+      <li>
+        <strong>Farm the first 1-3 pit.</strong>
+        Die at the rim, respawn at the start, get paid the walk again.
+        Train return soars into the 700s–1,000s. Greedy watch dies at the
+        same ledge for tens of millions of steps. That is the spike on the
+        chart, not World 8.
+      </li>
+      <li>
+        <strong>Stop paying the cheat, show him speed.</strong>
+        Falling in that pit earns nothing. Skip-4 had hidden velocity; we
+        painted it. The jump appears. Return collapses. 1-4 opens. That
+        collapse is the success.
+      </li>
+      <li>
+        <strong>World 2.</strong>
+        Sequential farthest is 2-1. Four stages flagged in order. About 13%
+        of the full cart by pixel length. The rest of the 32 stages are the
+        next budget.
+      </li>
+    </ol>
+
+    <h2>This run</h2>
+    <table>
+      <thead><tr><th>Piece</th><th>Choice</th></tr></thead>
+      <tbody>
+        <tr><td>Game</td><td>NES Super Mario Bros, full 32-stage cart (gym-super-mario-bros SuperMarioBros-v0)</td></tr>
+        <tr><td>Algorithm</td><td>PPO, clip 0.2, entropy 0.03, γ 0.99</td></tr>
+        <tr><td>Network</td><td>Nature CNN, Discrete(12)</td></tr>
+        <tr><td>Parallel games</td><td>16 trainers + 1 greedy watch window</td></tr>
+        <tr><td>First budget</td><td>100 million environment steps</td></tr>
+        <tr><td>Hardware</td><td>RTX 4080 Super (train on GPU; watch on CPU)</td></tr>
+        <tr><td>Reward</td><td>mario_cart_v3 (returns ÷10 vs an earlier scale)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Watch</h2>
+    <p>
+      Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.
+      Numbers and charts:
+      <a href="v3_ppo_mario_full_fresh/">v3_ppo_mario_full_fresh notebook</a>.
+      Space Invaders on this site is the same habit on a different game.
+      TrackMania notebooks are SAC on a car, not this code path.
+    </p>
+  </main>
+  <footer>
+    HTML explainer for the Gymnasium / NES PPO cart. No checkpoints on this page.
+    Snapshot at the 100 million step cap.
+  </footer>
+</body>
+</html>
