@@ -84,16 +84,16 @@
     <h1>Super Mario Bros · first 100 million steps</h1>
     <p class="lead">
       PPO + Nature CNN on the NES cart. Sixteen games explore; one capture
-      window plays the greedy policy. First budget done:
+      window plays the greedy policy.
       <strong>100 million environment steps</strong> on an RTX 4080 Super.
       Sequential farthest <strong>2-1</strong>, 4 of 32 stages in
-      order, 13% of the cart. Generated 2026-09-02 01:35 UTC.
+      order, 13% of the cart.
       Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.
     </p>
   </header>
   <main>
     <div class="stats">
-      <div class="stat"><b>100M</b><span>Env steps / first budget</span></div>
+      <div class="stat"><b>100M</b><span>Environment steps</span></div>
       <div class="stat"><b>2-1</b><span>Sequential farthest</span></div>
       <div class="stat"><b>4 / 32</b><span>Flags in order</span></div>
       <div class="stat"><b>13%</b><span>Cart pixels</span></div>
@@ -108,17 +108,14 @@
     <div class="callout">
       <strong>Return is not skill.</strong> Around 80 million steps, train
       return fell from about 1,000 to about 200. That is when Mario stopped
-      farming the first 1-3 pit and started beating World 1. The campaign
-      numbers are sequential farthest and cart percent. Return is “is PPO
-      still numerically alive.” Watch stage at snapshot: 1-2.
+      farming the first 1-3 pit and started beating World 1. Campaign
+      progress is sequential farthest and cart percent, not that number.
     </div>
 
     <h2>Training return</h2>
     <p class="caption">
-      PPO <code>return_mean</code> after each logged update (v3 scale, ÷10).
-      One point is a subsample of train.csv through the 100 million step cap.
-      The plateau near 50–78 million is the pit farm. The cliff is leaving it.
-      Source: v3_ppo_mario_full_fresh/train.csv.
+      Mean train return after each logged PPO update. The plateau near 50–78
+      million is the pit farm. The cliff is leaving it.
     </p>
     <div class="chart">
 <svg viewBox="0 0 920 280" role="img" aria-label="Train return (v3 /10) versus Env steps (millions)">
@@ -142,16 +139,14 @@
         <tr><td>48 – 78M</td><td>200 → 700–1,000</td><td>First-pit farm. Greedy dies at x≈752. Rim deaths in the thousands per hour. Return is high because dying is profitable.</td></tr>
         <tr><td>~80M</td><td>1,000 → 200</td><td>Speed painted into the frame. Skip-4 had hidden velocity. The jump starts to exist.</td></tr>
         <tr><td>80 – 86M</td><td>~220 and rising</td><td>Pit clears by the thousand. 1-4 opens. Left-mashing on the stairs gets blocked.</td></tr>
-        <tr><td>86M – 100M</td><td>260 – 350</td><td>Sequential 2-1. Watch still often shows 1-1 or 1-2. Cart ~13%.</td></tr>
+        <tr><td>86M – 100M</td><td>260 – 350</td><td>Sequential 2-1. About 13% of the cart.</td></tr>
       </tbody>
     </table>
 
     <h2>World 1 and the 2-1 frontier</h2>
     <p class="caption">
-      Sequential table at the 100 million cap. Live is how many of the 16
-      workers are on that stage right now. Ended is lifetime lives that
-      finished a life there. Max / flag is best x versus the flag-pole x
-      for that stage. Source: overlay stage table.
+      Live: how many of the 16 workers are on that stage. Ended: lives that
+      finished there. Max / flag: best x versus the flag pole.
     </p>
     <table>
       <thead><tr><th>Stage</th><th>Live</th><th>Ended</th><th>Reached (last 1k)</th><th>Max / flag</th></tr></thead>
@@ -168,29 +163,21 @@
     <table>
       <thead><tr><th>Issue</th><th>What it looked like</th><th>What we did</th><th>At 100M</th></tr></thead>
       <tbody>
-        <tr><td>Warp skip</td><td>Overlay peak 3-1 while World 1 was unsolved</td><td>1-2 / 4-2 going too high: −50 and a full reset. Cart bar counts only 1-1 → 8-4 in order.</td><td>Held</td></tr>
-        <tr><td>1-2 pole idle</td><td>TIME 000 on the last screen; timeout beat the warp tax</td><td>Pay moving right; stall tax after a short freeze</td><td>Held</td></tr>
-        <tr><td>1-3 pit farm</td><td>Die at 735–752, get paid the walk from 40 again</td><td>No x-pay while falling in that pit. Per-life progress on 1-3. Do not restore the old bonuses.</td><td>Pit is solved</td></tr>
-        <tr><td>Blind jump</td><td>Greedy pinned on the takeoff. Clears near zero for tens of millions</td><td>Paint player speed as the top row of the 84×84 frame</td><td>Jump appeared; 1-4 opened</td></tr>
-        <tr><td>Left-mash</td><td>After the pit, holding left into the 1-3 stairs until TIME 000</td><td>Once this life reaches the stairs, left becomes NOOP. Jump and right stay live.</td><td>Held</td></tr>
-        <tr><td>GPU fight</td><td>Steps/sec halved while frozen play was up</td><td>Train and the frozen window cannot share the GPU</td><td>Rule</td></tr>
+        <tr><td>Warp skip</td><td>Overlay peak 3-1 while World 1 was unsolved</td><td>Warp pipes reset the life. Cart bar only counts 1-1 → 8-4 in order.</td><td>Kept</td></tr>
+        <tr><td>1-2 pole idle</td><td>TIME 000 on the last screen; timeout beat the warp tax</td><td>Pay moving right; stall tax after a short freeze</td><td>Kept</td></tr>
+        <tr><td>1-3 pit farm</td><td>Die at 735–752, get paid the walk from 40 again</td><td>No x-pay while falling in that pit. Per-life progress on 1-3.</td><td>Solved</td></tr>
+        <tr><td>Blind jump</td><td>Greedy pinned on the takeoff. Clears near zero for tens of millions</td><td>Paint player speed as the top row of the 84×84 frame</td><td>1-4 opened</td></tr>
+        <tr><td>Left-mash</td><td>After the pit, holding left into the 1-3 stairs until TIME 000</td><td>Once this life reaches the stairs, left does nothing. Jump and right stay live.</td><td>Kept</td></tr>
       </tbody>
     </table>
-    <p>
-      Reward ideas we will not bring back: re-paying the walk after a 1-3
-      death, paying x while falling in that pit, graveyard terminate, a
-      +1/frame takeoff bonus, a freeze on the upper deck, or a 1-3-only cart.
-      Those either farmed the pit or would throw away the checkpoint.
-    </p>
 
     <h2>Entropy — how sure the policy is</h2>
     <p>
       Uniform random over 12 actions sits near 2.48 nats. At the cap, entropy
       is 0.76: favorite moves without a frozen script. Clip fraction
-      0.025. Throughput about 424 env steps/sec on this
-      snapshot (16 games).
+      0.025.
     </p>
-    <p class="caption">Policy entropy after PPO updates. Source: train.csv. Units: nats.</p>
+    <p class="caption">Policy entropy after PPO updates. Units: nats.</p>
     <div class="chart">
 <svg viewBox="0 0 920 280" role="img" aria-label="Entropy (nats) versus Env steps (millions)">
   <text x="14" y="18" class="muted tiny" transform="rotate(-90 14 140)">Entropy (nats)</text>
@@ -210,9 +197,8 @@
         The NES window is not a console. The emulator ticks as fast as the
         CPU will let it. Each decision already covers four NES frames, so
         realtime would be about 15 decisions per second. Watch has no 60 fps
-        cap. Greedy inference plus the emulator is often many times that, so
-        it looks like fast-forward. Training itself is 16 silent games on the
-        GPU, not that window.
+        cap, so it looks like fast-forward. Training itself is 16 silent
+        games, not that window.
       </p>
     </details>
     <details open>
@@ -229,9 +215,8 @@
       <summary>What does greedy mean?</summary>
       <p>
         The net outputs 12 probabilities. Greedy takes the largest one every
-        time (argmax). The trainers draw from the list, so they still try
-        second-best. Watch reloads new weights between lives; frozen play
-        does not.
+        time. The trainers draw from the list, so they still try second-best.
+        Watch reloads new weights between lives.
       </p>
     </details>
     <details>
@@ -245,35 +230,27 @@
     <details>
       <summary>Is a high train return good?</summary>
       <p>
-        Only as a health check (not collapsed to near-zero after a patch).
-        Farming a ledge can outscore finishing a castle. After the pit was
-        solved, return in the 200s–350s is normal for “actually playing later
-        stages.” 700–1,000 was the farm.
+        Only as a health check. Farming a ledge can outscore finishing a
+        castle. After the pit was solved, return in the 200s–350s is normal
+        for actually playing later stages. 700–1,000 was the farm.
       </p>
     </details>
 
-    <h2>Still open</h2>
-    <p>
-      World 2 is the live grind. Best x on 2-1 is not yet a flag. The yaml
-      budget can extend; this notebook is the first 100 million only. Do not
-      treat a later-world pin as the old 1-3 pit.
-    </p>
-
     <h2>Run config</h2>
     <table>
-      <thead><tr><th>Knob</th><th>Value</th></tr></thead>
+      <thead><tr><th>Setting</th><th>Value</th></tr></thead>
       <tbody>
-        <tr><td>run_name</td><td>v3_ppo_mario_full_fresh</td></tr>
-        <tr><td>env</td><td>SuperMarioBros-v0, COMPLEX, stack 4, skip 4</td></tr>
-        <tr><td>n_envs × n_steps</td><td>16 × 512</td></tr>
-        <tr><td>lr</td><td>2.5e-4 → 2.5e-5 linear over 100 million steps</td></tr>
-        <tr><td>ent_coef / clip</td><td>0.03 / 0.2</td></tr>
-        <tr><td>reward_id</td><td>mario_cart_v3</td></tr>
+        <tr><td>Run</td><td>v3_ppo_mario_full_fresh</td></tr>
+        <tr><td>Env</td><td>SuperMarioBros-v0, 12 actions, stack 4, skip 4</td></tr>
+        <tr><td>Parallel × steps</td><td>16 × 512</td></tr>
+        <tr><td>Learning rate</td><td>2.5e-4 → 2.5e-5 over 100 million steps</td></tr>
+        <tr><td>Entropy / clip</td><td>0.03 / 0.2</td></tr>
+        <tr><td>Reward</td><td>mario_cart_v3</td></tr>
       </tbody>
     </table>
   </main>
   <footer>
-    Snapshot at the 100 million step cap. No checkpoints on this page.
+    No checkpoints on this page. Generated 2026-09-02 01:51 UTC.
     Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.
   </footer>
 </body>

@@ -85,8 +85,7 @@
     <p class="lead">
       A neural net learned the NES cart from pixels and a homemade score —
       not from a walkthrough. After <strong>100 million</strong> environment
-      steps it has beaten World 1 in order and opened World 2. This page is
-      the wrap-up of that first budget.
+      steps it has beaten World 1 in order and opened World 2.
     </p>
   </header>
   <main>
@@ -103,16 +102,15 @@
     </div>
 
     <div class="stats">
-      <div class="stat"><b>100M</b><span>Env steps (first budget)</span></div>
+      <div class="stat"><b>100M</b><span>Environment steps</span></div>
       <div class="stat"><b>2-1</b><span>Sequential farthest</span></div>
       <div class="stat"><b>4 / 32</b><span>Stages flagged in order</span></div>
       <div class="stat"><b>13%</b><span>Cart pixels (length-weighted)</span></div>
     </div>
     <p>
-      Train return at the cap: <strong>305</strong> (v3 scale, already
-      ÷10). Charts, the pit-farm story, and the FAQ:
+      Train return at the cap: <strong>305</strong>. Charts, the pit-farm
+      story, and the FAQ:
       <a href="v3_ppo_mario_full_fresh/">run notebook</a>.
-      Generated 2026-09-02 01:35 UTC.
     </p>
     <p class="caption">PPO train return versus env steps (millions). The spike is a death farm, not genius. The cliff is leaving it.</p>
     <div class="chart">
@@ -129,7 +127,7 @@
 
     <h2>The loop</h2>
     <p>
-      Every moment is the same four beats. Repeat that a hundred million times
+      Every moment is the same five beats. Repeat that a hundred million times
       and the weights become a player. Nobody wrote “jump the first 1-3 pit.”
     </p>
     <div class="loop">
@@ -150,15 +148,13 @@
           picture. We shrink it to 84×84 grayscale and stack four frames so
           motion exists. Frame skip 4 hides a lot of velocity, so we also
           paint how fast Mario is moving as the top row of that tiny image.
-          Same tensor shape; the checkpoint still loads.
         </p>
       </div>
       <div>
         <h3>Hands</h3>
         <p>
-          Twelve discrete actions (COMPLEX): idle, run, jump, and the usual
-          NES diagonals. We did not switch to a simpler stick. That would
-          have been a new network and a new train.
+          Twelve discrete actions: idle, run, jump, and the usual NES
+          diagonals.
         </p>
       </div>
       <div>
@@ -185,10 +181,8 @@
       The network outputs twelve probabilities. <strong>Greedy</strong> means
       take the largest one, every time — no dice. That is the NES window on
       stream. The sixteen trainers <strong>sample</strong> from the same list,
-      so they still try the slightly-less-likely jump. PPO needs that noise.
-      Watch also reloads the latest checkpoint between lives; it is current,
-      not frozen. Frozen play (load once, never reload) is a different mode
-      and cannot share the GPU with training.
+      so they still try the slightly-less-likely jump. Watch reloads the
+      latest checkpoint between lives, so the TV is the current policy.
     </p>
 
     <h2>The plot of the first 100 million</h2>
@@ -214,8 +208,7 @@
       <li>
         <strong>World 2.</strong>
         Sequential farthest is 2-1. Four stages flagged in order. About 13%
-        of the full cart by pixel length. The rest of the 32 stages are the
-        next budget.
+        of the full cart by pixel length.
       </li>
     </ol>
 
@@ -227,9 +220,9 @@
         <tr><td>Algorithm</td><td>PPO, clip 0.2, entropy 0.03, γ 0.99</td></tr>
         <tr><td>Network</td><td>Nature CNN, Discrete(12)</td></tr>
         <tr><td>Parallel games</td><td>16 trainers + 1 greedy watch window</td></tr>
-        <tr><td>First budget</td><td>100 million environment steps</td></tr>
-        <tr><td>Hardware</td><td>RTX 4080 Super (train on GPU; watch on CPU)</td></tr>
-        <tr><td>Reward</td><td>mario_cart_v3 (returns ÷10 vs an earlier scale)</td></tr>
+        <tr><td>Budget</td><td>100 million environment steps</td></tr>
+        <tr><td>Hardware</td><td>RTX 4080 Super</td></tr>
+        <tr><td>Reward</td><td>mario_cart_v3</td></tr>
       </tbody>
     </table>
 
@@ -237,14 +230,11 @@
     <p>
       Live: <a href="https://www.twitch.tv/northeast22">twitch.tv/northeast22</a>.
       Numbers and charts:
-      <a href="v3_ppo_mario_full_fresh/">v3_ppo_mario_full_fresh notebook</a>.
-      Space Invaders on this site is the same habit on a different game.
-      TrackMania notebooks are SAC on a car, not this code path.
+      <a href="v3_ppo_mario_full_fresh/">run notebook</a>.
     </p>
   </main>
   <footer>
-    HTML explainer for the Gymnasium / NES PPO cart. No checkpoints on this page.
-    Snapshot at the 100 million step cap.
+    No checkpoints on this page. Generated 2026-09-02 01:51 UTC.
   </footer>
 </body>
 </html>
